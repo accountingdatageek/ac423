@@ -1,0 +1,518 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Expense Report Audit Simulation</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 30px; }
+        .report-section { margin-bottom: 40px; page-break-after: always; }
+        .expense-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .expense-table th, .expense-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        .expense-table th { background-color: #f2f2f2; }
+        .receipt { border: 2px solid #333; margin: 20px 0; padding: 15px; background: #f9f9f9; }
+        .receipt-header { text-align: center; font-weight: bold; margin-bottom: 10px; }
+        .amount-large { font-size: 18px; font-weight: bold; }
+        .red-flag { color: red; font-weight: bold; }
+        .audit-note { background: #ffffcc; padding: 10px; margin: 10px 0; border-left: 4px solid #ffcc00; }
+        .signature-line { margin-top: 30px; }
+        .company-header { background: #2e5c8f; color: white; padding: 15px; margin-bottom: 20px; }
+        .policy-violation { background: #ffe6e6; border: 1px solid #ff9999; }
+        .duplicate-flag { background: #ffeecc; border: 1px solid #ffaa00; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>TechCorp Industries</h1>
+    <h2>Expense Report Audit Simulation</h2>
+    <p>Internal Audit Department Training Exercise</p>
+</div>
+
+<div class="report-section">
+    <div class="company-header">
+        <h2>Employee #1: Sarah Chen - Chief Financial Officer</h2>
+        <p>Report Period: January 1-31, 2026 | Submitted: February 2, 2026</p>
+        <p><strong>Status: PRE-AUDITED by Internal Auditor (Mark Thompson)</strong></p>
+    </div>
+    
+    <div class="audit-note">
+        <strong>Auditor's Note:</strong> This report has been reviewed and approved by our internal audit team. 
+        All expenses appear reasonable and properly documented. - M. Thompson, Internal Auditor
+    </div>
+
+    <h3>Expense Summary</h3>
+    <table class="expense-table">
+        <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Receipt</th>
+        </tr>
+        <tr>
+            <td>Jan 5, 2026</td>
+            <td>Client dinner - Hartwell Industries CEO</td>
+            <td>Meals & Entertainment</td>
+            <td class="amount-large">$485.60</td>
+            <td>Receipt #CF001</td>
+        </tr>
+        <tr>
+            <td>Jan 12, 2026</td>
+            <td>Flight to NYC - Board Meeting</td>
+            <td>Travel</td>
+            <td>$1,247.00</td>
+            <td>Receipt #CF002</td>
+        </tr>
+        <tr>
+            <td>Jan 13-15, 2026</td>
+            <td>Hotel - NYC Board Meeting</td>
+            <td>Travel</td>
+            <td>$892.50</td>
+            <td>Receipt #CF003</td>
+        </tr>
+        <tr>
+            <td>Jan 20, 2026</td>
+            <td>Office supplies - executive suite</td>
+            <td>Office</td>
+            <td>$2,340.00</td>
+            <td>Receipt #CF004</td>
+        </tr>
+        <tr>
+            <td>Jan 25, 2026</td>
+            <td>Client gifts - Q4 appreciation</td>
+            <td>Client Relations</td>
+            <td>$1,850.00</td>
+            <td>Receipt #CF005</td>
+        </tr>
+    </table>
+    <p><strong>Total Expenses: $6,815.10</strong></p>
+
+    <div class="signature-line">
+        <p>Employee Signature: Sarah Chen___________________ Date: 2/2/2026</p>
+        <p>Manager Approval: James Rodriguez_______________ Date: 2/3/2026</p>
+        <p>Internal Audit: Mark Thompson__________________ Date: 2/4/2026</p>
+    </div>
+</div>
+
+<!-- CFO Receipts -->
+<div class="receipt">
+    <div class="receipt-header">Receipt #CF001</div>
+    <h3>Le Bernardin Restaurant</h3>
+    <p>155 West 51st Street, New York, NY 10019</p>
+    <p>Date: January 5, 2026 | Time: 7:30 PM</p>
+    <hr>
+    <p>Table for 4 - Server: Michael</p>
+    <p>Tasting Menu (2) ........................ $390.00</p>
+    <p>Wine Pairing (2) ........................ $180.00</p>
+    <p>Additional Wine .......................... $120.00</p>
+    <p>Tax ...................................... $69.00</p>
+    <p>Gratuity (20%) ........................... $151.80</p>
+    <hr>
+    <p class="amount-large">TOTAL: $910.80</p>
+    <p><em>Business Purpose: Dinner with Hartwell Industries CEO to discuss merger</em></p>
+    <p class="red-flag">Note: Receipt total ($910.80) doesn't match expense report ($485.60)</p>
+</div>
+
+<div class="receipt">
+    <div class="receipt-header">Receipt #CF002</div>
+    <h3>American Airlines</h3>
+    <p>Confirmation: ABC123</p>
+    <p>Date of Travel: January 12, 2026</p>
+    <hr>
+    <p>SFO → JFK | Flight AA101</p>
+    <p>Passenger: CHEN/SARAH MS</p>
+    <p>First Class</p>
+    <p>Base Fare ................................ $1,247.00</p>
+    <p>Taxes & Fees ............................. $0.00</p>
+    <hr>
+    <p class="amount-large">TOTAL: $1,247.00</p>
+    <p><em>Business Purpose: Board meeting attendance</em></p>
+</div>
+
+<div class="receipt">
+    <div class="receipt-header">Receipt #CF003</div>
+    <h3>The Plaza Hotel</h3>
+    <p>768 5th Avenue, New York, NY 10019</p>
+    <p>Dates: January 13-15, 2026 (2 nights)</p>
+    <hr>
+    <p>Guest: Sarah Chen</p>
+    <p>Suite Premium ............................. $795.00</p>
+    <p>Room Service .............................. $145.50</p>
+    <p>Taxes & Fees .............................. $127.50</p>
+    <hr>
+    <p class="amount-large">TOTAL: $1,068.00</p>
+    <p><em>Business Purpose: Accommodation for board meeting</em></p>
+    <p class="red-flag">Note: Receipt total ($1,068.00) doesn't match expense report ($892.50)</p>
+</div>
+
+<div class="receipt policy-violation">
+    <div class="receipt-header">Receipt #CF004</div>
+    <h3>Executive Office Furnishings</h3>
+    <p>1247 Business Blvd, San Francisco, CA</p>
+    <p>Date: January 20, 2026</p>
+    <hr>
+    <p>Italian Leather Executive Chair .......... $1,850.00</p>
+    <p>Mahogany Desk Accessories ................ $490.00</p>
+    <p>Delivery & Installation .................. $125.00</p>
+    <hr>
+    <p class="amount-large">TOTAL: $2,465.00</p>
+    <p><em>Business Purpose: Executive office upgrade</em></p>
+    <p class="red-flag">Policy Note: Furniture over $1,000 requires VP approval (missing)</p>
+</div>
+
+<div class="receipt">
+    <div class="receipt-header">Receipt #CF005</div>
+    <h3>Tiffany & Co.</h3>
+    <p>Union Square, San Francisco, CA</p>
+    <p>Date: January 25, 2026</p>
+    <hr>
+    <p>Sterling Silver Business Card Holder (5) . $925.00</p>
+    <p>Engraving Service ........................ $125.00</p>
+    <p>Gift Wrapping ............................ $50.00</p>
+    <p>Tax ....................................... $88.00</p>
+    <hr>
+    <p class="amount-large">TOTAL: $1,188.00</p>
+    <p><em>Business Purpose: Client appreciation gifts for Q4 top partners</em></p>
+    <p class="red-flag">Note: Receipt total ($1,188.00) doesn't match expense report ($1,850.00)</p>
+</div>
+
+<!-- Employee #2 -->
+<div class="report-section">
+    <div class="company-header">
+        <h2>Employee #2: Michael Rodriguez - Sales Director</h2>
+        <p>Report Period: January 1-31, 2026 | Submitted: February 5, 2026</p>
+        <p><strong>Status: PENDING AUDIT</strong></p>
+    </div>
+
+    <h3>Expense Summary</h3>
+    <table class="expense-table">
+        <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Receipt</th>
+        </tr>
+        <tr>
+            <td>Jan 8, 2026</td>
+            <td>Client lunch - Peterson Corp</td>
+            <td>Meals</td>
+            <td>$127.50</td>
+            <td>Receipt #MR001</td>
+        </tr>
+        <tr>
+            <td>Jan 15, 2026</td>
+            <td>Gas - company car</td>
+            <td>Travel</td>
+            <td>$89.40</td>
+            <td>Receipt #MR002</td>
+        </tr>
+        <tr class="duplicate-flag">
+            <td>Jan 15, 2026</td>
+            <td>Gas - company car</td>
+            <td>Travel</td>
+            <td>$89.40</td>
+            <td>Receipt #MR002</td>
+        </tr>
+        <tr>
+            <td>Jan 22, 2026</td>
+            <td>Conference registration - Sales Summit</td>
+            <td>Training</td>
+            <td>$750.00</td>
+            <td>Receipt #MR003</td>
+        </tr>
+        <tr>
+            <td>Jan 28, 2026</td>
+            <td>Office supplies</td>
+            <td>Office</td>
+            <td>$45.60</td>
+            <td>Missing</td>
+        </tr>
+        <tr>
+            <td>Jan 30, 2026</td>
+            <td>Team dinner - end of month celebration</td>
+            <td>Team Building</td>
+            <td>$340.80</td>
+            <td>Receipt #MR004</td>
+        </tr>
+    </table>
+    <p><strong>Total Expenses: $1,442.70</strong></p>
+
+    <div class="signature-line">
+        <p>Employee Signature: Michael Rodriguez____________ Date: 2/5/2026</p>
+        <p>Manager Approval: Sarah Chen___________________ Date: 2/6/2026</p>
+    </div>
+</div>
+
+<!-- Michael's Receipts -->
+<div class="receipt">
+    <div class="receipt-header">Receipt #MR001</div>
+    <h3>Morton's The Steakhouse</h3>
+    <p>400 Post Street, San Francisco, CA</p>
+    <p>Date: January 8, 2026 | Time: 12:15 PM</p>
+    <hr>
+    <p>Ribeye Steak ............................. $62.00</p>
+    <p>Salmon ................................... $45.00</p>
+    <p>Appetizer ................................ $18.00</p>
+    <p>Wine (2 glasses) ......................... $28.00</p>
+    <p>Tax ...................................... $12.24</p>
+    <p>Tip (18%) ................................ $29.48</p>
+    <hr>
+    <p class="amount-large">TOTAL: $194.72</p>
+    <p><em>Business Purpose: Lunch with Peterson Corp CEO - potential new client</em></p>
+    <p class="red-flag">Note: Receipt total ($194.72) doesn't match expense report ($127.50)</p>
+</div>
+
+<div class="receipt">
+    <div class="receipt-header">Receipt #MR002</div>
+    <h3>Shell Gas Station</h3>
+    <p>1555 Market Street, San Francisco, CA</p>
+    <p>Date: January 15, 2026 | Time: 8:42 AM</p>
+    <hr>
+    <p>Premium Unleaded</p>
+    <p>15.8 gallons @ $5.66/gal</p>
+    <p>Fuel ...................................... $89.43</p>
+    <hr>
+    <p class="amount-large">TOTAL: $89.43</p>
+    <p><em>Business Purpose: Company vehicle fuel</em></p>
+</div>
+
+<div class="receipt">
+    <div class="receipt-header">Receipt #MR003</div>
+    <h3>National Sales Conference</h3>
+    <p>Registration Confirmation</p>
+    <p>Date: January 22, 2026</p>
+    <hr>
+    <p>Attendee: Michael Rodriguez</p>
+    <p>TechCorp Industries</p>
+    <p>Conference Fee (3 days) ................... $750.00</p>
+    <p>Materials Fee ............................ $0.00</p>
+    <hr>
+    <p class="amount-large">TOTAL: $750.00</p>
+    <p><em>Business Purpose: Professional development - sales training</em></p>
+</div>
+
+<div class="receipt policy-violation">
+    <div class="receipt-header">Receipt #MR004</div>
+    <h3>Tony Roma's Restaurant</h3>
+    <p>2570 Van Ness Ave, San Francisco, CA</p>
+    <p>Date: January 30, 2026 | Time: 7:45 PM</p>
+    <hr>
+    <p>Party of 8</p>
+    <p>Dinner Total ............................. $280.60</p>
+    <p>Alcohol .................................. $145.20</p>
+    <p>Tax ...................................... $34.06</p>
+    <p>Tip (20%) ................................ $91.97</p>
+    <hr>
+    <p class="amount-large">TOTAL: $551.83</p>
+    <p><em>Business Purpose: Team building dinner</em></p>
+    <p class="red-flag">Policy Violation: Team social events over $300 require HR pre-approval</p>
+    <p class="red-flag">Receipt total ($551.83) doesn't match expense report ($340.80)</p>
+</div>
+
+<!-- Employee #3 -->
+<div class="report-section">
+    <div class="company-header">
+        <h2>Employee #3: Jennifer Park - Marketing Manager</h2>
+        <p>Report Period: January 1-31, 2026 | Submitted: February 7, 2026</p>
+        <p><strong>Status: PENDING AUDIT</strong></p>
+    </div>
+
+    <h3>Expense Summary</h3>
+    <table class="expense-table">
+        <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Receipt</th>
+        </tr>
+        <tr>
+            <td>Jan 3, 2026</td>
+            <td>Adobe Creative Suite - Annual license</td>
+            <td>Software</td>
+            <td>$599.88</td>
+            <td>Receipt #JP001</td>
+        </tr>
+        <tr>
+            <td>Jan 10, 2026</td>
+            <td>Marketing conference - booth materials</td>
+            <td>Marketing</td>
+            <td>$1,250.00</td>
+            <td>Receipt #JP002</td>
+        </tr>
+        <tr>
+            <td>Jan 18, 2026</td>
+            <td>Client presentation lunch</td>
+            <td>Meals</td>
+            <td>$95.75</td>
+            <td>Receipt #JP003</td>
+        </tr>
+        <tr>
+            <td>Jan 25, 2026</td>
+            <td>Promotional items - trade show</td>
+            <td>Marketing</td>
+            <td>$890.50</td>
+            <td>Receipt #JP004</td>
+        </tr>
+        <tr>
+            <td>Jan 31, 2026</td>
+            <td>Uber rides - client meetings</td>
+            <td>Travel</td>
+            <td>$127.30</td>
+            <td>Receipt #JP005</td>
+        </tr>
+    </table>
+    <p><strong>Total Expenses: $2,963.43</strong></p>
+
+    <div class="signature-line">
+        <p>Employee Signature: Jennifer Park________________ Date: 2/7/2026</p>
+        <p>Manager Approval: Pending_____________________ Date: _______</p>
+    </div>
+</div>
+
+<!-- Jennifer's Receipts -->
+<div class="receipt">
+    <div class="receipt-header">Receipt #JP001</div>
+    <h3>Adobe Systems</h3>
+    <p>Online Purchase</p>
+    <p>Date: January 3, 2026</p>
+    <hr>
+    <p>Creative Cloud All Apps - Annual</p>
+    <p>License: jennifer.park@techcorp.com</p>
+    <p>Subscription (12 months) ................. $599.88</p>
+    <p>Tax ...................................... $0.00</p>
+    <hr>
+    <p class="amount-large">TOTAL: $599.88</p>
+    <p><em>Business Purpose: Design software for marketing materials</em></p>
+</div>
+
+<div class="receipt">
+    <div class="receipt-header">Receipt #JP002</div>
+    <h3>Display Pro Exhibits</h3>
+    <p>4589 Industrial Way, Oakland, CA</p>
+    <p>Date: January 10, 2026</p>
+    <hr>
+    <p>Pop-up Banner Stand ..................... $450.00</p>
+    <p>Brochure Display Rack ................... $125.00</p>
+    <p>Table Cover (custom print) .............. $275.00</p>
+    <p>Setup & Delivery ........................ $185.00</p>
+    <p>Rush Fee ................................. $215.00</p>
+    <hr>
+    <p class="amount-large">TOTAL: $1,250.00</p>
+    <p><em>Business Purpose: Trade show booth materials for Tech Expo 2026</em></p>
+</div>
+
+<div class="receipt">
+    <div class="receipt-header">Receipt #JP003</div>
+    <h3>Café Zoetrope</h3>
+    <p>916 Kearny Street, San Francisco, CA</p>
+    <p>Date: January 18, 2026 | Time: 12:30 PM</p>
+    <hr>
+    <p>Caesar Salad ............................. $16.00</p>
+    <p>Grilled Chicken .......................... $24.00</p>
+    <p>Pasta Primavera .......................... $22.00</p>
+    <p>Coffee (2) ............................... $8.00</p>
+    <p>Tax ...................................... $5.60</p>
+    <p>Tip (18%) ................................ $13.63</p>
+    <hr>
+    <p class="amount-large">TOTAL: $89.23</p>
+    <p><em>Business Purpose: Presentation lunch with potential marketing partner</em></p>
+    <p class="red-flag">Note: Receipt total ($89.23) doesn't match expense report ($95.75)</p>
+</div>
+
+<div class="receipt">
+    <div class="receipt-header">Receipt #JP004</div>
+    <h3>PromoShop Inc.</h3>
+    <p>2847 Mission Street, San Francisco, CA</p>
+    <p>Date: January 25, 2026</p>
+    <hr>
+    <p>USB Drives - 500 units (custom logo) .... $675.00</p>
+    <p>Pens - 1000 units (company branded) ..... $125.00</p>
+    <p>Tote Bags - 250 units ................... $312.50</p>
+    <p>Setup Fee ................................ $45.00</p>
+    <hr>
+    <p class="amount-large">TOTAL: $1,157.50</p>
+    <p><em>Business Purpose: Promotional items for upcoming trade show</em></p>
+    <p class="red-flag">Note: Receipt total ($1,157.50) doesn't match expense report ($890.50)</p>
+</div>
+
+<div class="receipt">
+    <div class="receipt-header">Receipt #JP005</div>
+    <h3>Uber Technologies</h3>
+    <p>Trip Summary - January 2026</p>
+    <p>Account: jennifer.park@techcorp.com</p>
+    <hr>
+    <p>Jan 15: TechCorp → Client Meeting ....... $15.75</p>
+    <p>Jan 15: Client Meeting → Office ......... $18.25</p>
+    <p>Jan 22: Office → Airport ................ $45.60</p>
+    <p>Jan 22: Airport → Hotel ................. $32.40</p>
+    <p>Jan 23: Hotel → Office .................. $15.30</p>
+    <hr>
+    <p class="amount-large">TOTAL: $127.30</p>
+    <p><em>Business Purpose: Transportation for client meetings and conference travel</em></p>
+</div>
+
+<!-- Audit Instructions -->
+<div class="report-section">
+    <div class="company-header">
+        <h2>AUDIT INSTRUCTIONS FOR STUDENTS</h2>
+    </div>
+    
+    <h3>Company Expense Policy (Key Points)</h3>
+    <ul>
+        <li>Meals & Entertainment: $150 per person maximum for client meals</li>
+        <li>Individual purchases over $1,000 require VP approval</li>
+        <li>Team social events over $300 require HR pre-approval</li>
+        <li>All expenses must have original receipts - no exceptions</li>
+        <li>Receipt amounts must match expense report amounts exactly</li>
+        <li>Business purpose must be clearly documented</li>
+        <li>Alcohol at team events is limited to $50 per person</li>
+    </ul>
+
+    <h3>Audit Objectives</h3>
+    <p>Students should identify and document:</p>
+    <ol>
+        <li>Policy violations</li>
+        <li>Missing documentation</li>
+        <li>Amount discrepancies between receipts and expense reports</li>
+        <li>Duplicate submissions</li>
+        <li>Questionable business purposes</li>
+        <li>Potential bias in the CFO's "pre-approved" report</li>
+    </ol>
+
+    <h3>Expected Findings Summary</h3>
+    <div class="audit-note">
+        <strong>CFO Report Issues:</strong>
+        <ul>
+            <li>Multiple amount discrepancies despite "clean" audit approval</li>
+            <li>Policy violation: Furniture purchase over $1,000 without VP approval</li>
+            <li>Excessive meal amount ($910 actual vs $485 reported)</li>
+            <li>Potential management pressure on internal auditor</li>
+        </ul>
+    </div>
+
+    <div class="audit-note">
+        <strong>Sales Director Issues:</strong>
+        <ul>
+            <li>Duplicate gas expense submission</li>
+            <li>Missing receipt for office supplies</li>
+            <li>Policy violation: Team dinner over $300 without HR approval</li>
+            <li>Amount discrepancies on multiple expenses</li>
+        </ul>
+    </div>
+
+    <div class="audit-note">
+        <strong>Marketing Manager Issues:</strong>
+        <ul>
+            <li>Multiple amount discrepancies</li>
+            <li>Missing manager approval</li>
+            <li>Minor meal amount discrepancy</li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>
