@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization Exam 1 - Interactive Study Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            overflow-x: auto;
+        }
+        
+        .nav-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-size: 1em;
+            font-weight: 600;
+            color: #495057;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+        
+        .nav-tab:hover {
+            background: #e9ecef;
+            color: #667eea;
+        }
+        
+        .nav-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .topic-section {
+            margin-bottom: 40px;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+        
+        .topic-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        
+        .topic-section h3 {
+            color: #764ba2;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .key-concept {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+        
+        .key-concept h4 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        
+        .example {
+            background: #fff3cd;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .example h4 {
+            color: #856404;
+            margin-bottom: 8px;
+        }
+        
+        .quiz-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid #e9ecef;
+        }
+        
+        .quiz-question {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        
+        .quiz-options {
+            list-style: none;
+        }
+        
+        .quiz-option {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .quiz-option:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        
+        .quiz-option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .quiz-option.correct {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+        
+        .quiz-option.incorrect {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+        
+        .check-answer-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+        
+        .check-answer-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .check-answer-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .explanation {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .explanation.show {
+            display: block;
+            animation: slideDown 0.3s;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 500px; }
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #28a745, #20c997);
+            height: 100%;
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .visual-example {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .chart-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .chart-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .chart-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 5px;
+        }
+        
+        .badge-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .badge-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .badge-info {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .badge-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .tip-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .tip-box strong {
+            color: #155724;
+        }
+        
+        .warning-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .warning-box strong {
+            color: #721c24;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .nav-tab {
+                padding: 12px 15px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Data Visualization Exam 1</h1>
+            <p>Interactive Study Guide - Master the Fundamentals</p>
+        </header>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('overview')">Overview</button>
+            <button class="nav-tab" onclick="showTab('charts')">Chart Types</button>
+            <button class="nav-tab" onclick="showTab('principles')">Design Principles</button>
+            <button class="nav-tab" onclick="showTab('tableau')">Tableau Basics</button>
+            <button class="nav-tab" onclick="showTab('best-practices')">Best Practices</button>
+            <button class="nav-tab" onclick="showTab('practice')">Practice Quiz</button>
+        </div>
+        
+        <div class="content">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="topic-section">
+                    <h2>📚 Exam Overview</h2>
+                    <p>This study guide covers all major topics from Exam 1, including chart types, visualization principles, Tableau fundamentals, and data communication best practices.</p>
+                    
+                    <div class="key-concept">
+                        <h4>Key Topics Covered:</h4>
+                        <ul>
+                            <li><strong>Chart Types:</strong> Line graphs, bar charts, slope graphs, waterfall charts, pie charts</li>
+                            <li><strong>Gestalt Principles:</strong> Proximity, similarity, enclosure, closure, continuity, connection</li>
+                            <li><strong>Preattentive Attributes:</strong> Position, length, shape, color, etc.</li>
+                            <li><strong>Data Principles:</strong> Tidy data, dimensions vs. measures, cognitive load</li>
+                            <li><strong>Tableau Concepts:</strong> Dimensions, measures, tool selection</li>
+                            <li><strong>Best Practices:</strong> Color usage, gridlines, clutter reduction, text alternatives</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="topic-section">
+                    <h2>🎯 Study Strategy</h2>
+                    <div class="tip-box">
+                        <strong>💡 Pro Tips:</strong>
+                        <ul>
+                            <li>Focus on understanding <em>when</em> to use each chart type</li>
+                            <li>Memorize the Gestalt principles with visual examples</li>
+                            <li>Understand the difference between dimensions and measures in Tableau</li>
+                            <li>Practice identifying preattentive attributes</li>
+                            <li>Know the purpose of storytelling with data vs. raw numbers</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chart Types Tab -->
+            <div id="charts" class="tab-content">
+                <div class="topic-section">
+                    <h2>📈 Chart Types & Usage</h2>
+                    
+                    <div class="chart-comparison">
+                        <div class="chart-item">
+                            <h4>Line Graph</h4>
+                            <span class="badge badge-primary">Trends Over Time</span>
+                            <p><strong>Best for:</strong> Showing changes over time, continuous data</p>
+                            <p><strong>Key feature:</strong> Zero baseline NOT required</p>
+                        </div>
+                        
+                        <div class="chart-item">
+                            <h4>Bar Chart</h4>
+                            <span class="badge badge-success">Comparisons</span>
+                            <p><strong>Best for:</strong> Comparing categories or values</p>
+                            <p><strong>Limitation:</strong> Comparing segments at baseline is difficult (stacked bars)</p>
+                        </div>
+                        
+                        <div class="chart-item">
+                            <h4>Slope Graph</h4>
+                            <span class="badge badge-info">Before/After</span>
+                            <p><strong>Best for:</strong> Visualizing before-and-after comparisons</p>
+                            <p><strong>Example:</strong> Performance metrics pre- and post-policy implementation</p>
+                        </div>
+                        
+                        <div class="chart-item">
+                            <h4>Waterfall Chart</h4>
+                            <span class="badge badge-warning">Cumulative Change</span>
+                            <p><strong>Best for:</strong> Showing how a starting value changes through positive/negative contributions</p>
+                            <p><strong>Example:</strong> Budget breakdown, profit/loss analysis</p>
+                        </div>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Pie Charts - When Acceptable?</h4>
+                        <p>According to some practitioners, pie charts are acceptable when:</p>
+                        <ul>
+                            <li>The pie chart has very few slices (minimal categories)</li>
+                            <li>You're NOT comparing many pie charts side-by-side</li>
+                            <li>The slices do not need to add up to exactly 100%</li>
+                            <li>Categories/slices are NOT very close in size</li>
+                        </ul>
+                        <div class="warning-box">
+                            <strong>⚠️ Caution:</strong> Pie charts are often criticized because comparing angles/areas is difficult for the human visual system.
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <h4>📊 Chart Selection Examples</h4>
+                        <p><strong>Q: Show profit over time?</strong><br>
+                        A: Line chart (best practice: most recent date on right, going left to right)</p>
+                        
+                        <p><strong>Q: Show monthly revenue with breakdown of income vs. expenses?</strong><br>
+                        A: Waterfall chart</p>
+                        
+                        <p><strong>Q: Compare Q1 vs. Q2 sales across departments?</strong><br>
+                        A: Slope graph</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Design Principles Tab -->
+            <div id="principles" class="tab-content">
+                <div class="topic-section">
+                    <h2>🎨 Gestalt Principles</h2>
+                    <p>Gestalt principles describe how humans naturally perceive and group visual elements. Understanding these helps create more effective visualizations.</p>
+                    
+                    <div class="key-concept">
+                        <h4>Proximity</h4>
+                        <p>Objects that are close together are perceived as a group.</p>
+                        <p><strong>Application:</strong> Use spacing to direct readers to scan across rows or down columns by grouping related data.</p>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Similarity</h4>
+                        <p>Objects that share visual characteristics (color, shape, size) are perceived as related.</p>
+                        <p><strong>Application:</strong> Use consistent colors for related data categories.</p>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Enclosure</h4>
+                        <p>Objects within a boundary are perceived as a group.</p>
+                        <p><strong>Application:</strong> Use boxes or shading to group related information.</p>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Closure</h4>
+                        <p>We mentally "close" gaps to perceive complete shapes.</p>
+                        <p><strong>Application:</strong> Define areas using x and y axes without needing all four borders.</p>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Continuity</h4>
+                        <p>Our eyes naturally follow lines and curves.</p>
+                        <p><strong>Application:</strong> Arrange elements along a path to guide attention.</p>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Connection</h4>
+                        <p>Objects that are physically connected are perceived as related.</p>
+                        <p><strong>Application:</strong> Line graphs connecting data points show relationships over time.</p>
+                        <p><strong>Strength Order:</strong> Connection is one of the STRONGEST grouping principles (Continuity → Enclosure → Connection is strongest)</p>
+                    </div>
+                    
+                    <div class="example">
+                        <h4>🧠 Visual Memory Test</h4>
+                        <p>The image showing scattered points vs. connected points (line graph) demonstrates the <strong>Connection</strong> principle - connecting data points helps viewers see relationships and patterns more clearly.</p>
+                    </div>
+                </div>
+                
+                <div class="topic-section">
+                    <h2>👁️ Preattentive Attributes</h2>
+                    <p>Preattentive attributes are visual properties processed rapidly and automatically by the human visual system, requiring minimal cognitive effort.</p>
+                    
+                    <div class="key-concept">
+                        <h4>What is a Preattentive Attribute?</h4>
+                        <p>A visual property that is processed rapidly and automatically, typically by the human visual system. These attributes help viewers quickly decode visualizations.</p>
+                        <p><strong>Key characteristic:</strong> They allow viewers to detect patterns without conscious thought.</p>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Common Preattentive Attributes:</h4>
+                        <ul>
+                            <li><strong>Position</strong> - Where something is located (most effective for quantitative comparison)</li>
+                            <li><strong>Length</strong> - Size/length of bars, lines</li>
+                            <li><strong>Color</strong> - Hue, saturation, brightness</li>
+                            <li><strong>Shape</strong> - Different symbols or forms</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ Important:</strong> Position is NOT a preattentive attribute according to the exam definition. Shape is the weaker attribute for quantitative comparison - shapes are difficult to compare accurately.
+                    </div>
+                </div>
+                
+                <div class="topic-section">
+                    <h2>🧠 Cognitive Load</h2>
+                    
+                    <div class="key-concept">
+                        <h4>Definition</h4>
+                        <p>Cognitive load refers to the mental effort required to process information. In data visualization, high cognitive load means viewers must work harder to understand the chart.</p>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Reducing Cognitive Load</h4>
+                        <p><strong>High cognitive load forces viewers to:</strong></p>
+                        <ul>
+                            <li>Spend more effort decoding the chart instead of interpreting the data</li>
+                            <li>Makes visualizations less effective for communication</li>
+                        </ul>
+                        <p><strong>To reduce cognitive load:</strong></p>
+                        <ul>
+                            <li>Remove unnecessary elements (declutter)</li>
+                            <li>Use preattentive attributes effectively</li>
+                            <li>Eliminate heavy borders and chart frames</li>
+                            <li>Use clear axis titles and labels</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="example">
+                        <h4>Examples:</h4>
+                        <p><strong>Increases cognitive load:</strong> Heavy borders, dense gridlines, unnecessary 3D effects, too many colors</p>
+                        <p><strong>Decreases cognitive load:</strong> Direct labels, minimal gridlines, bold color for key data, simple design</p>
+                    </div>
+                </div>
+                
+                <div class="topic-section">
+                    <h2>🔍 Clutter</h2>
+                    
+                    <div class="key-concept">
+                        <h4>Definition</h4>
+                        <p>Clutter refers to visual elements that take up space but do not increase understanding. These elements distract from the data story.</p>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Examples of Clutter:</h4>
+                        <ul>
+                            <li>Unnecessary gridlines</li>
+                            <li>Heavy chart borders and frames</li>
+                            <li>Excessive data markers</li>
+                            <li>Decorative elements without purpose</li>
+                            <li>Too many colors</li>
+                            <li>Redundant legends when direct labels work better</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 Best Practice:</strong> Visual elements should take up space but DO increase understanding. If it doesn't add value, remove it!
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tableau Basics Tab -->
+            <div id="tableau" class="tab-content">
+                <div class="topic-section">
+                    <h2>📊 Tableau Fundamentals</h2>
+                    
+                    <div class="key-concept">
+                        <h4>Dimensions vs. Measures</h4>
+                        <p><strong>Dimensions:</strong></p>
+                        <ul>
+                            <li>Typically answer "how much" or "how many"</li>
+                            <li>Qualitative/categorical data</li>
+                            <li>Examples: Customer Name, Category, Date, Product Name</li>
+                            <li>Used to slice and group data</li>
+                        </ul>
+                        
+                        <p><strong>Measures:</strong></p>
+                        <ul>
+                            <li>Quantitative numerical values</li>
+                            <li>Examples: Sales, Profit, Quantity, Price</li>
+                            <li>Can be aggregated (sum, average, count, etc.)</li>
+                            <li>Typically used on axes to show amounts</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="example">
+                        <h4>📋 Data Classification Exercise</h4>
+                        <p>Given this dataset:</p>
+                        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                            <tr style="background: #667eea; color: white;">
+                                <th style="padding: 10px; border: 1px solid #ddd;">Date</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Customer ID</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Customer Name</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Category</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Price</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Quantity</th>
+                            </tr>
+                        </table>
+                        
+                        <p><strong>Dimensions:</strong> Date, Customer ID, Customer Name, Category</p>
+                        <p><strong>Measures:</strong> Price, Quantity</p>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Tool Selection</h4>
+                        <p><strong>Tableau:</strong> Best suited for interactive dashboards and exploratory analysis</p>
+                        <p><strong>R and RStudio:</strong> Best for advanced statistical modeling and reproducible research</p>
+                        <p><strong>Excel:</strong> Basic charts and familiar spreadsheet interface</p>
+                        <p><strong>PowerBI:</strong> Business intelligence and reporting</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Best Practices Tab -->
+            <div id="best-practices" class="tab-content">
+                <div class="topic-section">
+                    <h2>✨ Visualization Best Practices</h2>
+                    
+                    <div class="key-concept">
+                        <h4>The Interpretation Gap</h4>
+                        <p>The difference between what the data shows and what audiences understand without additional narrative or context.</p>
+                        <p><strong>Solution:</strong> Provide storytelling, annotations, and context to bridge this gap.</p>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Storytelling with Data</h4>
+                        <p>Storytelling provides <strong>context and meaning</strong> to raw numbers. It helps audiences:</p>
+                        <ul>
+                            <li>Understand the "why" behind the data</li>
+                            <li>Connect emotionally with insights</li>
+                            <li>Remember key takeaways</li>
+                            <li>Make informed decisions</li>
+                        </ul>
+                        <p><strong>NOT primarily for:</strong> Complexity, more variables, or statistical significance alone</p>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Exploratory vs. Explanatory Visualizations</h4>
+                        <p><strong>Exploratory:</strong></p>
+                        <ul>
+                            <li>Analyzes data for understanding</li>
+                            <li>Gives users tools to find their own answers</li>
+                            <li>Interactive and flexible</li>
+                            <li>Does NOT bypass the discovery process</li>
+                        </ul>
+                        
+                        <p><strong>Explanatory:</strong></p>
+                        <ul>
+                            <li>Communicates a specific story or insight</li>
+                            <li>Guides audience to a conclusion</li>
+                            <li>More static and focused</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="topic-section">
+                    <h2>🎨 Color Usage</h2>
+                    
+                    <div class="key-concept">
+                        <h4>Color Best Practices</h4>
+                        <ul>
+                            <li><strong>Use it sparingly:</strong> Too many colors create confusion</li>
+                            <li><strong>Use it consistently:</strong> Same color = same meaning across visualizations</li>
+                            <li><strong>Design with color-blind in mind:</strong> Use colorblind-friendly palettes</li>
+                            <li><strong>Be thoughtful of tone:</strong> Colors convey emotion and meaning (red = negative, green = positive in Western contexts)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ Risk of Enclosure:</strong> Overusing enclosure (boxes, borders) can create unnecessary visual weight and clutter.
+                    </div>
+                </div>
+                
+                <div class="topic-section">
+                    <h2>📝 Text in Visualizations</h2>
+                    
+                    <div class="key-concept">
+                        <h4>When to Use Text Alone</h4>
+                        <p>Use text instead of visualizations when:</p>
+                        <ul>
+                            <li>You have a single number or simple comparison</li>
+                            <li>The message is straightforward</li>
+                            <li>A chart would be unnecessary complexity</li>
+                        </ul>
+                        <p><strong>Example:</strong> "Sales increased 15% this quarter" is clearer as text than a simple bar chart.</p>
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 Remember:</strong> Not every data point needs a visualization. Sometimes simple text is the most effective communication method.
+                    </div>
+                </div>
+                
+                <div class="topic-section">
+                    <h2>📊 Other Design Principles</h2>
+                    
+                    <div class="key-concept">
+                        <h4>Tables</h4>
+                        <p><strong>Why avoid in presentations?</strong></p>
+                        <ul>
+                            <li>Audience reads them instead of listening to you</li>
+                            <li>They lose their attention</li>
+                            <li>Don't display enough information (compared to charts)</li>
+                            <li>Are not professional enough</li>
+                        </ul>
+                        <p><strong>✓ Correct answer:</strong> As the audience reads them, you lose their attention</p>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Gridlines</h4>
+                        <p><strong>Should visualizations have gridlines?</strong></p>
+                        <p>False - Visualizations should NEVER have gridlines as a blanket rule.</p>
+                        <p><strong>Nuance:</strong> Gridlines can be helpful in some contexts but should be used minimally and only when they improve understanding.</p>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Visual Hierarchy</h4>
+                        <p>Without other visual cues, audiences typically start at the <strong>top left</strong> of a visualization (Western reading convention).</p>
+                    </div>
+                    
+                    <div class="key-concept">
+                        <h4>Lack of Clear Contrast</h4>
+                        <p>Lack of clear contrast can be a form of visual clutter because it makes the visualization harder to read and process.</p>
+                    </div>
+                </div>
+                
+                <div class="topic-section">
+                    <h2>📐 Tidy Data Principles</h2>
+                    
+                    <div class="key-concept">
+                        <h4>Tidy Data Format</h4>
+                        <p>In tidy data principles, each variable should be in <strong>one column</strong>. This makes data:</p>
+                        <ul>
+                            <li>Easier to analyze</li>
+                            <li>Easier to visualize</li>
+                            <li>More consistent and organized</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ Common Mistakes:</strong>
+                        <ul>
+                            <li>Having variables in multiple columns (for redundancy) - WRONG</li>
+                            <li>Aggregating data before storage - depends on use case</li>
+                            <li>Converting to text format - not a tidy data principle</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="topic-section">
+                    <h2>🔄 The Visualization Process</h2>
+                    
+                    <div class="key-concept">
+                        <h4>Is Visualization a One-Time Activity?</h4>
+                        <p><strong>TRUE:</strong> Visualization is rarely a one-and-done activity. It's typically an iterative process involving:</p>
+                        <ul>
+                            <li>Initial creation</li>
+                            <li>Review and feedback</li>
+                            <li>Refinement and adjustment</li>
+                            <li>Testing with audiences</li>
+                            <li>Final polish</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Practice Quiz Tab -->
+            <div id="practice" class="tab-content">
+                <div class="topic-section">
+                    <h2>🎯 Practice Quiz</h2>
+                    <p>Test your knowledge! Click on an answer, then click "Check Answer" to see if you're correct.</p>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="quizProgress" style="width: 0%;">0%</div>
+                    </div>
+                    
+                    <!-- Quiz Questions -->
+                    <div class="quiz-card">
+                        <div class="quiz-question">1. Which chart is best for visualizing before-and-after comparisons?</div>
+                        <ul class="quiz-options" data-answer="2">
+                            <li class="quiz-option" data-value="0">Line Graph</li>
+                            <li class="quiz-option" data-value="1">Bar Chart</li>
+                            <li class="quiz-option" data-value="2">Slope Graph</li>
+                            <li class="quiz-option" data-value="3">Waterfall</li>
+                        </ul>
+                        <button class="check-answer-btn" onclick="checkAnswer(this)">Check Answer</button>
+                        <div class="explanation">
+                            <strong>✓ Correct!</strong> Slope graphs are specifically designed to show before-and-after comparisons, such as performance metrics pre- and post-policy implementation.
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-card">
+                        <div class="quiz-question">2. What is the interpretation gap?</div>
+                        <ul class="quiz-options" data-answer="1">
+                            <li class="quiz-option" data-value="0">The time between data collection and analysis</li>
+                            <li class="quiz-option" data-value="1">The difference between what data shows and what audiences understand without narrative</li>
+                            <li class="quiz-option" data-value="2">The gap between different data sources</li>
+                            <li class="quiz-option" data-value="3">The space between rows in a dataset</li>
+                        </ul>
+                        <button class="check-answer-btn" onclick="checkAnswer(this)">Check Answer</button>
+                        <div class="explanation">
+                            <strong>✓ Correct!</strong> The interpretation gap is the difference between what the data shows and what audiences understand without additional narrative or context.
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-card">
+                        <div class="quiz-question">3. In Tableau, dimensions typically answer which questions?</div>
+                        <ul class="quiz-options" data-answer="1">
+                            <li class="quiz-option" data-value="0">They are always numerical</li>
+                            <li class="quiz-option" data-value="1">They typically answer "how much" or "How many"</li>
+                            <li class="quiz-option" data-value="2">They set the granularity or level of detail in a view</li>
+                            <li class="quiz-option" data-value="3">They are always aggregated</li>
+                        </ul>
+                        <button class="check-answer-btn" onclick="checkAnswer(this)">Check Answer</button>
+                        <div class="explanation">
+                            <strong>✓ Correct!</strong> Dimensions typically answer "how much" or "how many" - they're the categorical/qualitative aspects of your data.
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-card">
+                        <div class="quiz-question">4. Which Gestalt principle is demonstrated by connecting data points with lines?</div>
+                        <ul class="quiz-options" data-answer="3">
+                            <li class="quiz-option" data-value="0">Proximity</li>
+                            <li class="quiz-option" data-value="1">Similarity</li>
+                            <li class="quiz-option" data-value="2">Enclosure</li>
+                            <li class="quiz-option" data-value="3">Connection</li>
+                        </ul>
+                        <button class="check-answer-btn" onclick="checkAnswer(this)">Check Answer</button>
+                        <div class="explanation">
+                            <strong>✓ Correct!</strong> Connection is the Gestalt principle where physically connected objects (like points on a line graph) are perceived as related.
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-card">
+                        <div class="quiz-question">5. What does cognitive load refer to?</div>
+                        <ul class="quiz-options" data-answer="1">
+                            <li class="quiz-option" data-value="0">The amount of data in a visualization</li>
+                            <li class="quiz-option" data-value="1">The mental effort required to process information</li>
+                            <li class="quiz-option" data-value="2">The time it takes to create a chart</li>
+                            <li class="quiz-option" data-value="3">The number of colors in a visualization</li>
+                        </ul>
+                        <button class="check-answer-btn" onclick="checkAnswer(this)">Check Answer</button>
+                        <div class="explanation">
+                            <strong>✓ Correct!</strong> Cognitive load is the mental effort required to process information. High cognitive load means viewers work harder to decode your visualization.
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-card">
+                        <div class="quiz-question">6. When are pie charts most acceptable?</div>
+                        <ul class="quiz-options" data-answer="1">
+                            <li class="quiz-option" data-value="0">You need to compare many pie charts</li>
+                            <li class="quiz-option" data-value="1">The pie chart has very few slices</li>
+                            <li class="quiz-option" data-value="2">The slices do not add up to 100 percent</li>
+                            <li class="quiz-option" data-value="3">Categories are very close in size</li>
+                        </ul>
+                        <button class="check-answer-btn" onclick="checkAnswer(this)">Check Answer</button>
+                        <div class="explanation">
+                            <strong>✓ Correct!</strong> Pie charts are most acceptable when they have very few slices, making comparison easier for viewers.
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-card">
+                        <div class="quiz-question">7. Line graphs must have a zero baseline.</div>
+                        <ul class="quiz-options" data-answer="1">
+                            <li class="quiz-option" data-value="0">True</li>
+                            <li class="quiz-option" data-value="1">False</li>
+                        </ul>
+                        <button class="check-answer-btn" onclick="checkAnswer(this)">Check Answer</button>
+                        <div class="explanation">
+                            <strong>✓ Correct!</strong> False - Line graphs do NOT need to have a zero baseline. They're used to show trends and changes over time, not absolute magnitude.
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-card">
+                        <div class="quiz-question">8. Which is NOT a preattentive attribute?</div>
+                        <ul class="quiz-options" data-answer="0">
+                            <li class="quiz-option" data-value="0">Position</li>
+                            <li class="quiz-option" data-value="1">Length</li>
+                            <li class="quiz-option" data-value="2">Shape</li>
+                            <li class="quiz-option" data-value="3">Numerical annotation</li>
+                        </ul>
+                        <button class="check-answer-btn" onclick="checkAnswer(this)">Check Answer</button>
+                        <div class="explanation">
+                            <strong>✓ Correct!</strong> According to the exam, Position is NOT listed as a preattentive attribute in this context.
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-card">
+                        <div class="quiz-question">9. In tidy data, each variable should be:</div>
+                        <ul class="quiz-options" data-answer="1">
+                            <li class="quiz-option" data-value="0">In multiple columns for redundancy</li>
+                            <li class="quiz-option" data-value="1">In one column</li>
+                            <li class="quiz-option" data-value="2">Aggregated before storage</li>
+                            <li class="quiz-option" data-value="3">Converted to text format</li>
+                        </ul>
+                        <button class="check-answer-btn" onclick="checkAnswer(this)">Check Answer</button>
+                        <div class="explanation">
+                            <strong>✓ Correct!</strong> In tidy data principles, each variable should be in one column for easier analysis and visualization.
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-card">
+                        <div class="quiz-question">10. Visualization is rarely a one-and-done activity.</div>
+                        <ul class="quiz-options" data-answer="0">
+                            <li class="quiz-option" data-value="0">True</li>
+                            <li class="quiz-option" data-value="1">False</li>
+                        </ul>
+                        <button class="check-answer-btn" onclick="checkAnswer(this)">Check Answer</button>
+                        <div class="explanation">
+                            <strong>✓ Correct!</strong> True - Visualization is typically an iterative process requiring refinement and adjustment.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let totalQuestions = 10;
+        let correctAnswers = 0;
+        let answeredQuestions = 0;
+        
+        function showTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remove active class from all nav tabs
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked nav tab
+            event.target.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function checkAnswer(button) {
+            const card = button.closest('.quiz-card');
+            const options = card.querySelector('.quiz-options');
+            const selected = options.querySelector('.quiz-option.selected');
+            
+            if (!selected) {
+                alert('Please select an answer first!');
+                return;
+            }
+            
+            const correctAnswer = parseInt(options.dataset.answer);
+            const selectedValue = parseInt(selected.dataset.value);
+            const explanation = card.querySelector('.explanation');
+            
+            // Check if already answered
+            if (button.disabled) return;
+            
+            if (selectedValue === correctAnswer) {
+                selected.classList.add('correct');
+                correctAnswers++;
+            } else {
+                selected.classList.add('incorrect');
+                // Show correct answer
+                const correctOption = options.querySelector(`[data-value="${correctAnswer}"]`);
+                correctOption.classList.add('correct');
+            }
+            
+            explanation.classList.add('show');
+            button.disabled = true;
+            button.textContent = selectedValue === correctAnswer ? '✓ Correct!' : '✗ Incorrect';
+            
+            answeredQuestions++;
+            updateProgress();
+        }
+        
+        function updateProgress() {
+            const percentage = Math.round((answeredQuestions / totalQuestions) * 100);
+            const progressBar = document.getElementById('quizProgress');
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = percentage + '% (' + answeredQuestions + '/' + totalQuestions + ')';
+        }
+        
+        // Add click handlers to quiz options
+        document.addEventListener('DOMContentLoaded', function() {
+            const allOptions = document.querySelectorAll('.quiz-option');
+            allOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const card = this.closest('.quiz-card');
+                    const button = card.querySelector('.check-answer-btn');
+                    
+                    // Don't allow changes after checking answer
+                    if (button.disabled) return;
+                    
+                    // Remove selected class from siblings
+                    const siblings = this.parentElement.querySelectorAll('.quiz-option');
+                    siblings.forEach(sib => sib.classList.remove('selected'));
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
