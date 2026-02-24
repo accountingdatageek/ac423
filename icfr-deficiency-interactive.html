@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICFR Deficiency Framework · Auditing 400</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f5f0e8;
+  --paper2: #ede8dc;
+  --paper3: #e4ddd0;
+  --ink: #1a1610;
+  --ink2: #3d3528;
+  --ink3: #6b5f4a;
+  --ink4: #9a8e7a;
+  --rule: #c8bfaa;
+  --rule2: #ddd6c8;
+
+  --green: #2d6a47;
+  --green-bg: #e8f2ec;
+  --green-mid: #4a9968;
+
+  --amber: #b06820;
+  --amber-bg: #fdf0e2;
+  --amber-mid: #d4892a;
+
+  --red: #8b2020;
+  --red-bg: #fde8e8;
+  --red-mid: #c03030;
+
+  --blue: #1a4a7a;
+  --blue-bg: #e8f0fa;
+
+  --serif: 'Playfair Display', Georgia, serif;
+  --mono: 'DM Mono', 'Courier New', monospace;
+  --sans: 'DM Sans', sans-serif;
+
+  --radius: 3px;
+  --shadow: 0 2px 8px rgba(26,22,16,0.10), 0 1px 3px rgba(26,22,16,0.06);
+  --shadow-lg: 0 8px 32px rgba(26,22,16,0.14), 0 2px 8px rgba(26,22,16,0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper2);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+  background-image:
+    repeating-linear-gradient(
+      transparent,
+      transparent 27px,
+      var(--rule2) 27px,
+      var(--rule2) 28px
+    );
+  background-size: 100% 28px;
+}
+
+/* ── HEADER ─────────────────────────────────── */
+.site-header {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-lg);
+}
+.header-inner {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+.header-brand {
+  padding: 14px 28px;
+  border-right: 1px solid rgba(255,255,255,0.12);
+  flex-shrink: 0;
+}
+.header-brand h1 {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  color: var(--paper);
+}
+.header-brand .sub {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-top: 2px;
+}
+.header-nav {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  padding: 0 8px;
+}
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--ink4);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 0 18px;
+  cursor: pointer;
+  transition: all 0.18s;
+  position: relative;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.nav-btn .nav-num {
+  font-size: 0.6rem;
+  opacity: 0.5;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+.nav-btn:hover { color: var(--paper); }
+.nav-btn.active {
+  color: var(--paper);
+}
+.nav-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--amber-mid);
+}
+.header-pills {
+  margin-left: auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tier-pill {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+  font-weight: 500;
+}
+.tier-pill.d { background: var(--green); color: #d8f0e2; }
+.tier-pill.s { background: var(--amber); color: #fde8c8; }
+.tier-pill.m { background: var(--red); color: #fdd8d8; }
+
+/* ── LAYOUT ─────────────────────────────────── */
+.main { max-width: 1200px; margin: 0 auto; padding: 32px 28px 60px; }
+.panel { display: none; }
+.panel.active { display: block; animation: fadeIn 0.22s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.section-title {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.section-sub {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 28px;
+}
+
+/* ── COMPARISON TABLE ────────────────────────── */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr 1fr;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  background: var(--paper);
+  margin-bottom: 32px;
+}
+.cg-header {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 12px 16px;
+  font-family: var(--mono);
+  font-size: 0.67rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.cg-header.left { justify-content: flex-start; background: var(--ink2); }
+.cg-header.d-col { background: var(--green); }
+.cg-header.s-col { background: var(--amber); }
+.cg-header.m-col { background: var(--red); }
+.cg-label {
+  padding: 11px 16px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--ink3);
+  background: var(--paper3);
+  border-top: 1px solid var(--rule2);
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.cg-cell {
+  padding: 11px 16px;
+  font-size: 0.84rem;
+  color: var(--ink2);
+  border-top: 1px solid var(--rule2);
+  border-left: 1px solid var(--rule2);
+  line-height: 1.55;
+}
+.cg-cell.d-col { background: var(--green-bg); }
+.cg-cell.s-col { background: var(--amber-bg); }
+.cg-cell.m-col { background: var(--red-bg); }
+.cg-cell .badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 2px;
+  font-weight: 500;
+  margin-right: 3px;
+}
+.badge.yes { background: var(--green); color: white; }
+.badge.partial { background: var(--amber); color: white; }
+.badge.no { background: var(--red); color: white; }
+.badge.req { background: var(--blue); color: white; }
+.cg-cell ul { padding-left: 1rem; }
+.cg-cell li { margin-bottom: 3px; font-size: 0.82rem; }
+
+.compare-note {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--blue);
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  color: var(--ink2);
+  box-shadow: var(--shadow);
+  margin-bottom: 32px;
+  line-height: 1.65;
+}
+.compare-note strong { color: var(--ink); font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* ── SEVERITY FACTORS ───────────────────────── */
+.factors-section { margin-bottom: 32px; }
+.factors-section h3 {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 400;
+  margin-bottom: 16px;
+  color: var(--ink2);
+}
+.factors-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.factor-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+.factor-card h4 {
+  font-family: var(--mono);
+  font-size: 0.67rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 10px;
+}
+.factor-card li {
+  list-style: none;
+  font-size: 0.82rem;
+  color: var(--ink2);
+  padding: 5px 0 5px 14px;
+  border-bottom: 1px solid var(--rule2);
+  position: relative;
+  line-height: 1.45;
+}
+.factor-card li:last-child { border-bottom: none; }
+.factor-card li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--rule);
+  font-size: 0.65rem;
+  top: 7px;
+}
+
+/* ── DECISION TREE ───────────────────────────── */
+.tree-container {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 36px 28px;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.tree-container::before {
+  content: 'PCAOB AS 2201';
+  position: absolute;
+  top: 14px; right: 18px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rule);
+}
+
+/* Tree flow */
+.tree-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.tree-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  position: relative;
+}
+.t-node {
+  border: 2px solid var(--rule);
+  background: var(--paper2);
+  border-radius: 4px;
+  padding: 12px 20px;
+  font-size: 0.85rem;
+  color: var(--ink);
+  text-align: center;
+  line-height: 1.4;
+  transition: all 0.2s;
+  cursor: default;
+  position: relative;
+}
+.t-node.start {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 10px 24px;
+}
+.t-node.question {
+  background: white;
+  border-color: var(--ink3);
+  border-style: dashed;
+  max-width: 360px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.92rem;
+}
+.t-node.question:hover {
+  border-color: var(--ink);
+  background: var(--blue-bg);
+  transform: scale(1.02);
+}
+.t-node.outcome-d {
+  background: var(--green-bg);
+  border-color: var(--green);
+  border-style: solid;
+  color: var(--green);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  min-width: 160px;
+}
+.t-node.outcome-s {
+  background: var(--amber-bg);
+  border-color: var(--amber);
+  color: var(--amber);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  min-width: 160px;
+}
+.t-node.outcome-m {
+  background: var(--red-bg);
+  border-color: var(--red);
+  color: var(--red);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  min-width: 180px;
+}
+
+/* Vertical connector */
+.t-v-line {
+  width: 2px;
+  height: 28px;
+  background: var(--rule);
+  margin: 0 auto;
+}
+.t-v-line.branch {
+  height: 20px;
+}
+
+/* Horizontal branch row */
+.t-branch-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+}
+.t-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+}
+.t-h-line {
+  height: 2px;
+  background: var(--rule);
+  width: 100%;
+}
+.t-h-line.half-right { width: 50%; margin-left: auto; }
+.t-h-line.half-left { width: 50%; margin-right: auto; }
+
+.t-label {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  padding: 3px 8px;
+  background: var(--paper);
+  border: 1px solid var(--rule2);
+  border-radius: 2px;
+  margin: 4px 0;
+  white-space: nowrap;
+}
+.t-label.yes { color: var(--green); border-color: var(--green-mid); background: var(--green-bg); }
+.t-label.no { color: var(--ink3); }
+.t-label.also-yes { color: var(--amber); border-color: var(--amber-mid); background: var(--amber-bg); }
+
+/* interactive tree path highlighting */
+.tree-interactive { margin-top: 24px; }
+.tree-interactive h3 {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 14px;
+}
+.tree-steps { display: flex; flex-direction: column; gap: 10px; }
+.tree-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--paper2);
+  border: 1px solid var(--rule2);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.tree-step:hover { background: var(--paper3); border-color: var(--rule); }
+.tree-step.active {
+  background: white;
+  border-color: var(--ink3);
+  box-shadow: var(--shadow);
+}
+.tree-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--rule);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.18s;
+}
+.tree-step.active .tree-step-num { background: var(--ink); }
+.tree-step-content h4 {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+.tree-step-content p {
+  font-size: 0.83rem;
+  color: var(--ink3);
+  line-height: 1.5;
+}
+.tree-step-content .step-threshold {
+  display: inline-block;
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 0.67rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+.tree-step-content .step-threshold.d { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-mid); }
+.tree-step-content .step-threshold.s { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-mid); }
+.tree-step-content .step-threshold.m { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-mid); }
+
+.tree-detail-panel {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-top: 16px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--ink2);
+  box-shadow: var(--shadow);
+  display: none;
+}
+.tree-detail-panel.show { display: block; animation: fadeIn 0.18s ease; }
+
+/* ── SCENARIO CLASSIFIER ─────────────────────── */
+.scenario-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.score-display {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 6px 14px;
+  border-radius: var(--radius);
+}
+.score-display span { color: var(--ink); font-weight: 500; }
+
+.scenario-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  align-items: start;
+}
+
+.scenario-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  min-height: 260px;
+  transition: border-color 0.2s;
+}
+.scenario-card.answered-correct { border-color: var(--green); }
+.scenario-card.answered-wrong { border-color: var(--red); }
+
+.sc-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.sc-num {
+  font-family: var(--mono);
+  font-size: 0.67rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink4);
+}
+.sc-company {
+  font-family: var(--mono);
+  font-size: 0.67rem;
+  color: var(--ink4);
+  letter-spacing: 0.04em;
+}
+.scenario-card h3 {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--ink);
+  line-height: 1.35;
+}
+.scenario-card .sc-body {
+  font-size: 0.87rem;
+  color: var(--ink2);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.sc-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.sc-tag {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  background: var(--paper3);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--ink3);
+}
+
+.classify-sidebar h3 {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 12px;
+}
+.classify-btns { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.classify-btn {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: var(--radius);
+  border: 1.5px solid;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: 0.86rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1.3;
+}
+.classify-btn .btn-icon {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cb-d { border-color: var(--green); color: var(--green); }
+.cb-d:hover:not(:disabled) { background: var(--green-bg); }
+.cb-d .btn-icon { background: var(--green); }
+.cb-s { border-color: var(--amber); color: var(--amber); }
+.cb-s:hover:not(:disabled) { background: var(--amber-bg); }
+.cb-s .btn-icon { background: var(--amber); }
+.cb-m { border-color: var(--red); color: var(--red); }
+.cb-m:hover:not(:disabled) { background: var(--red-bg); }
+.cb-m .btn-icon { background: var(--red); }
+.classify-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.feedback-panel {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 14px;
+  font-size: 0.84rem;
+  color: var(--ink2);
+  line-height: 1.65;
+  display: none;
+  box-shadow: var(--shadow);
+}
+.feedback-panel.show { display: block; animation: fadeIn 0.2s; }
+.feedback-panel.correct { border-color: var(--green); }
+.feedback-panel.wrong { border-color: var(--red); }
+.fb-verdict {
+  font-family: var(--mono);
+  font-size: 0.67rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.fb-verdict.v-correct { color: var(--green); }
+.fb-verdict.v-wrong { color: var(--red); }
+.fb-verdict .correct-answer-tag {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  padding: 1px 6px;
+  border-radius: 2px;
+  background: var(--amber-bg);
+  color: var(--amber);
+  border: 1px solid var(--amber-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.sc-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+.sc-nav-btn {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  color: var(--ink3);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: all 0.15s;
+}
+.sc-nav-btn:hover:not(:disabled) { border-color: var(--ink3); color: var(--ink); }
+.sc-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.progress-dots { display: flex; gap: 7px; align-items: center; }
+.pdot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--rule);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: transparent;
+}
+.pdot:hover { border-color: var(--ink3); }
+.pdot.cur { border-color: var(--ink); background: var(--ink); }
+.pdot.ok { border-color: var(--green); background: var(--green); }
+.pdot.bad { border-color: var(--red); background: var(--red); }
+
+/* ── QUIZ ────────────────────────────────────── */
+.quiz-wrap { max-width: 780px; }
+.quiz-progress-bar {
+  height: 4px;
+  background: var(--rule2);
+  border-radius: 2px;
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+.quiz-progress-fill {
+  height: 100%;
+  background: var(--amber-mid);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+.quiz-q-text {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.quiz-q-num {
+  font-family: var(--mono);
+  font-size: 0.67rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  display: block;
+  margin-bottom: 6px;
+}
+.quiz-opts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.quiz-opt {
+  background: var(--paper);
+  border: 1.5px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 0.87rem;
+  font-family: var(--sans);
+  color: var(--ink2);
+  text-align: left;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  transition: all 0.15s;
+  line-height: 1.5;
+  box-shadow: var(--shadow);
+}
+.quiz-opt .opt-letter {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--ink4);
+  min-width: 20px;
+  padding-top: 1px;
+  flex-shrink: 0;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--ink3); background: white; }
+.quiz-opt.qo-correct { border-color: var(--green); background: var(--green-bg); color: var(--ink); }
+.quiz-opt.qo-correct .opt-letter { color: var(--green); font-weight: 500; }
+.quiz-opt.qo-wrong { border-color: var(--red); background: var(--red-bg); color: var(--ink2); }
+.quiz-opt.qo-wrong .opt-letter { color: var(--red); }
+.quiz-opt.qo-reveal { border-color: var(--green); }
+.quiz-opt:disabled { cursor: default; }
+
+.quiz-explanation {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--amber-mid);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--ink2);
+  display: none;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+.quiz-explanation.show { display: block; animation: fadeIn 0.2s; }
+.quiz-explanation .expl-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 6px;
+}
+.quiz-explanation strong { color: var(--ink); }
+
+.quiz-nav-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.quiz-counter {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--ink4);
+  letter-spacing: 0.06em;
+}
+.quiz-next-btn {
+  background: var(--ink);
+  border: none;
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 9px 20px;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: opacity 0.15s;
+}
+.quiz-next-btn:hover { opacity: 0.8; }
+.quiz-next-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.quiz-final {
+  text-align: center;
+  padding: 48px 32px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  display: none;
+}
+.quiz-final.show { display: block; animation: fadeIn 0.3s; }
+.qf-grade {
+  font-family: var(--serif);
+  font-size: 5rem;
+  color: var(--amber);
+  line-height: 1;
+  margin: 12px 0;
+}
+.qf-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink4);
+}
+.qf-msg {
+  font-size: 0.9rem;
+  color: var(--ink3);
+  max-width: 480px;
+  margin: 12px auto 24px;
+  line-height: 1.6;
+}
+.qf-retry {
+  background: none;
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 9px 22px;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: all 0.15s;
+}
+.qf-retry:hover { background: var(--ink); color: var(--paper); }
+
+/* ── TREE SVG diagram ─────────────────────────── */
+.tree-svg-wrap {
+  background: white;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 28px 20px;
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+  margin-bottom: 28px;
+}
+.tree-svg-wrap svg { display: block; margin: 0 auto; font-family: var(--sans); }
+
+/* ── RESPONSIVE ──────────────────────────────── */
+@media (max-width: 820px) {
+  .scenario-layout { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 100px 1fr 1fr 1fr; }
+  .factors-grid { grid-template-columns: 1fr 1fr; }
+  .header-pills { display: none; }
+  .main { padding: 20px 16px 48px; }
+}
+@media (max-width: 600px) {
+  .compare-grid { grid-template-columns: 1fr; }
+  .cg-header, .cg-label, .cg-cell { display: block; }
+  .factors-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <h1>ICFR Deficiency Framework</h1>
+      <div class="sub">PCAOB AS 2201 · Auditing &amp; Assurance · 400-Level</div>
+    </div>
+    <nav class="header-nav">
+      <button class="nav-btn active" onclick="showPanel('compare')" id="tab-compare">
+        Comparison <span class="nav-num">01</span>
+      </button>
+      <button class="nav-btn" onclick="showPanel('tree')" id="tab-tree">
+        Decision Tree <span class="nav-num">02</span>
+      </button>
+      <button class="nav-btn" onclick="showPanel('scenarios')" id="tab-scenarios">
+        Classify Scenarios <span class="nav-num">03</span>
+      </button>
+      <button class="nav-btn" onclick="showPanel('quiz')" id="tab-quiz">
+        Concept Quiz <span class="nav-num">04</span>
+      </button>
+    </nav>
+    <div class="header-pills">
+      <span class="tier-pill d">Deficiency</span>
+      <span class="tier-pill s">Sig. Deficiency</span>
+      <span class="tier-pill m">Material Weakness</span>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+<!-- ═══════════════════════════════════════
+     PANEL 1 — SIDE-BY-SIDE COMPARISON
+════════════════════════════════════════ -->
+<div class="panel active" id="panel-compare">
+  <div class="section-title">Side-by-Side Comparison</div>
+  <div class="section-sub">PCAOB AS 2201 · Three-Tier Internal Control Deficiency Framework</div>
+
+  <div class="compare-grid">
+    <!-- headers -->
+    <div class="cg-header left">Dimension</div>
+    <div class="cg-header d-col">Control<br>Deficiency</div>
+    <div class="cg-header s-col">Significant<br>Deficiency</div>
+    <div class="cg-header m-col">Material<br>Weakness</div>
+
+    <!-- PCAOB definition -->
+    <div class="cg-label">PCAOB Definition</div>
+    <div class="cg-cell d-col">Design or operating weakness that does <em>not</em> rise to SD or MW level (AS 2201.07)</div>
+    <div class="cg-cell s-col">Less severe than MW, yet <em>important enough</em> to merit attention by oversight (AS 2201.08)</div>
+    <div class="cg-cell m-col"><em>Reasonable possibility</em> that a material misstatement will not be prevented/detected on a timely basis (AS 2201.09)</div>
+
+    <!-- Likelihood threshold -->
+    <div class="cg-label">Likelihood Threshold</div>
+    <div class="cg-cell d-col">Remote — unlikely to result in misstatement</div>
+    <div class="cg-cell s-col">More-than-remote likelihood of a more-than-inconsequential misstatement</div>
+    <div class="cg-cell m-col"><strong>Reasonable possibility</strong> = more than remote (need not be probable)</div>
+
+    <!-- Magnitude -->
+    <div class="cg-label">Magnitude of Potential Misstatement</div>
+    <div class="cg-cell d-col">Inconsequential — well below materiality</div>
+    <div class="cg-cell s-col">More-than-inconsequential but not material</div>
+    <div class="cg-cell m-col">Material — exceeds or could exceed financial statement materiality</div>
+
+    <!-- Communication -->
+    <div class="cg-label">Required Communication</div>
+    <div class="cg-cell d-col"><span class="badge req">Management</span> — communicated (written not required by AS)</div>
+    <div class="cg-cell s-col"><span class="badge req">Audit Committee</span> — must be communicated in <em>writing</em></div>
+    <div class="cg-cell m-col"><span class="badge req">Audit Committee</span> in writing + <span class="badge req">Public Disclosure</span> in management's ICFR report</div>
+
+    <!-- Auditor opinion -->
+    <div class="cg-label">Impact on Auditor's ICFR Opinion</div>
+    <div class="cg-cell d-col"><span class="badge yes">None</span> Unqualified opinion unaffected</div>
+    <div class="cg-cell s-col"><span class="badge partial">Consider</span> Noted in auditor communication; no direct opinion impact</div>
+    <div class="cg-cell m-col"><span class="badge no">Adverse</span> Auditor must issue <em>adverse</em> ICFR opinion (public co.)</div>
+
+    <!-- Compensating controls -->
+    <div class="cg-label">Compensating Controls</div>
+    <div class="cg-cell d-col">Typically exist and are effective; reduce risk to acceptable level</div>
+    <div class="cg-cell s-col">May partially mitigate but do not fully reduce to deficiency level</div>
+    <div class="cg-cell m-col">Compensating controls must be evaluated but often cannot cure MW alone</div>
+
+    <!-- Examples -->
+    <div class="cg-label">Illustrative Examples</div>
+    <div class="cg-cell d-col"><ul>
+      <li>Missing approval on one low-dollar expense</li>
+      <li>Password policy exception on non-financial system</li>
+      <li>Minor reconciliation delay on small account</li>
+    </ul></div>
+    <div class="cg-cell s-col"><ul>
+      <li>AP clerk can edit vendor master file; partial compensating review</li>
+      <li>~20% of inventory counts reconciled late; no adjustments found</li>
+      <li>Weak segregation of duties in payroll; supervisor review exists</li>
+    </ul></div>
+    <div class="cg-cell m-col"><ul>
+      <li>CFO can post manual JEs to revenue with no review</li>
+      <li>ERP allows unrestricted modification by IT</li>
+      <li>Auditor finds $6M error management's controls missed</li>
+    </ul></div>
+
+    <!-- AS 2201.69 Indicator? -->
+    <div class="cg-label">AS 2201.69 Strong Indicator?</div>
+    <div class="cg-cell d-col"><span class="badge yes">No</span></div>
+    <div class="cg-cell s-col"><span class="badge partial">Possibly</span> If it involves control environment or oversight</div>
+    <div class="cg-cell m-col"><span class="badge no">Yes</span> Restatements, auditor-detected misstatements, audit committee failure, mgmt fraud</div>
+  </div>
+
+  <div class="compare-note">
+    <strong>Key Insight — Aggregation:</strong> Multiple control deficiencies that individually fall below the SD or MW threshold must be evaluated in combination. Deficiencies affecting related processes, accounts, or assertions can aggregate to a higher severity classification under PCAOB AS 2201.65–.67. Auditors must consider whether the <em>combined</em> exposure creates a reasonable possibility of material misstatement.
+  </div>
+
+  <div class="factors-section">
+    <h3>Severity Assessment Factors (AS 2201.65–.68)</h3>
+    <div class="factors-grid">
+      <div class="factor-card">
+        <h4>Exposure &amp; Nature Factors</h4>
+        <ul>
+          <li>Financial statement accounts and assertions affected</li>
+          <li>Susceptibility to loss or fraud</li>
+          <li>Subjectivity and complexity of the assertion</li>
+          <li>Volume of transactions flowing through the control</li>
+        </ul>
+      </div>
+      <div class="factor-card">
+        <h4>Mitigating Factors</h4>
+        <ul>
+          <li>Existence and operating effectiveness of compensating controls</li>
+          <li>Monitoring controls (internal audit, management review)</li>
+          <li>Nature of the financial reporting element involved</li>
+          <li>Interaction with other controls in the same cycle</li>
+        </ul>
+      </div>
+      <div class="factor-card">
+        <h4>AS 2201.69 Strong MW Indicators</h4>
+        <ul>
+          <li>Restatement of previously issued financial statements</li>
+          <li>Auditor detects material misstatement entity missed</li>
+          <li>Audit committee provides ineffective oversight</li>
+          <li>Material fraud by senior management</li>
+          <li>Ineffective internal audit / risk assessment function</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PANEL 2 — DECISION TREE
+════════════════════════════════════════ -->
+<div class="panel" id="panel-tree">
+  <div class="section-title">Classification Decision Tree</div>
+  <div class="section-sub">Interactive walkthrough of the PCAOB severity assessment process</div>
+
+  <!-- SVG Decision Tree -->
+  <div class="tree-svg-wrap">
+    <svg width="760" height="420" viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#9a8e7a"/>
+        </marker>
+        <marker id="arr-g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#2d6a47"/>
+        </marker>
+        <marker id="arr-a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#b06820"/>
+        </marker>
+        <marker id="arr-r" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#8b2020"/>
+        </marker>
+      </defs>
+
+      <!-- START -->
+      <rect x="280" y="16" width="200" height="36" rx="3" fill="#1a1610"/>
+      <text x="380" y="39" text-anchor="middle" fill="#f5f0e8" font-family="DM Mono, monospace" font-size="11" letter-spacing="1">CONTROL FLAW IDENTIFIED</text>
+
+      <!-- Line down -->
+      <line x1="380" y1="52" x2="380" y2="90" stroke="#9a8e7a" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- Q1 — design or operating? -->
+      <rect x="210" y="90" width="340" height="48" rx="3" fill="white" stroke="#6b5f4a" stroke-dasharray="5,3" stroke-width="1.5"/>
+      <text x="380" y="111" text-anchor="middle" fill="#1a1610" font-family="Playfair Display, serif" font-size="13" font-style="italic">Is there a deficiency in design</text>
+      <text x="380" y="128" text-anchor="middle" fill="#1a1610" font-family="Playfair Display, serif" font-size="13" font-style="italic">or operating effectiveness?</text>
+
+      <!-- YES arrow down -->
+      <line x1="380" y1="138" x2="380" y2="178" stroke="#9a8e7a" stroke-width="1.5" marker-end="url(#arr)"/>
+      <rect x="343" y="146" width="74" height="18" rx="2" fill="#f5f0e8"/>
+      <text x="380" y="159" text-anchor="middle" fill="#9a8e7a" font-family="DM Mono, monospace" font-size="10" letter-spacing="1">YES</text>
+
+      <!-- Q2 — Reasonable possibility of material misstatement? -->
+      <rect x="148" y="178" width="464" height="48" rx="3" fill="white" stroke="#6b5f4a" stroke-dasharray="5,3" stroke-width="1.5"/>
+      <text x="380" y="199" text-anchor="middle" fill="#1a1610" font-family="Playfair Display, serif" font-size="13" font-style="italic">Is there a reasonable possibility of a</text>
+      <text x="380" y="216" text-anchor="middle" fill="#1a1610" font-family="Playfair Display, serif" font-size="13" font-style="italic">material misstatement? (more than remote)</text>
+
+      <!-- YES → right → MW -->
+      <line x1="612" y1="202" x2="660" y2="202" stroke="#8b2020" stroke-width="1.5" marker-end="url(#arr-r)"/>
+      <rect x="582" y="193" width="28" height="18" rx="2" fill="#fde8e8"/>
+      <text x="596" y="206" text-anchor="middle" fill="#8b2020" font-family="DM Mono, monospace" font-size="10" letter-spacing="1">YES</text>
+
+      <!-- Material Weakness box -->
+      <rect x="660" y="178" width="86" height="48" rx="3" fill="#fde8e8" stroke="#8b2020" stroke-width="1.5"/>
+      <text x="703" y="198" text-anchor="middle" fill="#8b2020" font-family="DM Mono, monospace" font-size="10" font-weight="600" letter-spacing="1">MATERIAL</text>
+      <text x="703" y="214" text-anchor="middle" fill="#8b2020" font-family="DM Mono, monospace" font-size="10" font-weight="600" letter-spacing="1">WEAKNESS</text>
+
+      <!-- NO → down from Q2 -->
+      <line x1="380" y1="226" x2="380" y2="268" stroke="#9a8e7a" stroke-width="1.5" marker-end="url(#arr)"/>
+      <rect x="344" y="233" width="72" height="18" rx="2" fill="#f5f0e8"/>
+      <text x="380" y="246" text-anchor="middle" fill="#9a8e7a" font-family="DM Mono, monospace" font-size="10" letter-spacing="1">NO</text>
+
+      <!-- Q3 -->
+      <rect x="130" y="268" width="500" height="48" rx="3" fill="white" stroke="#6b5f4a" stroke-dasharray="5,3" stroke-width="1.5"/>
+      <text x="380" y="289" text-anchor="middle" fill="#1a1610" font-family="Playfair Display, serif" font-size="13" font-style="italic">Is there more-than-remote likelihood of a</text>
+      <text x="380" y="306" text-anchor="middle" fill="#1a1610" font-family="Playfair Display, serif" font-size="13" font-style="italic">more-than-inconsequential misstatement?</text>
+
+      <!-- YES right → Sig Def -->
+      <line x1="630" y1="292" x2="666" y2="292" stroke="#b06820" stroke-width="1.5" marker-end="url(#arr-a)"/>
+      <rect x="600" y="282" width="28" height="18" rx="2" fill="#fdf0e2"/>
+      <text x="614" y="295" text-anchor="middle" fill="#b06820" font-family="DM Mono, monospace" font-size="10" letter-spacing="1">YES</text>
+
+      <!-- Sig Def box -->
+      <rect x="666" y="268" width="86" height="48" rx="3" fill="#fdf0e2" stroke="#b06820" stroke-width="1.5"/>
+      <text x="709" y="288" text-anchor="middle" fill="#b06820" font-family="DM Mono, monospace" font-size="9" font-weight="600" letter-spacing="1">SIGNIFICANT</text>
+      <text x="709" y="304" text-anchor="middle" fill="#b06820" font-family="DM Mono, monospace" font-size="9" font-weight="600" letter-spacing="1">DEFICIENCY</text>
+
+      <!-- NO down → Control Def -->
+      <line x1="380" y1="316" x2="380" y2="358" stroke="#2d6a47" stroke-width="1.5" marker-end="url(#arr-g)"/>
+      <rect x="344" y="323" width="72" height="18" rx="2" fill="#f5f0e8"/>
+      <text x="380" y="336" text-anchor="middle" fill="#2d6a47" font-family="DM Mono, monospace" font-size="10" letter-spacing="1">NO</text>
+
+      <!-- Control Def box -->
+      <rect x="272" y="358" width="216" height="48" rx="3" fill="#e8f2ec" stroke="#2d6a47" stroke-width="1.5"/>
+      <text x="380" y="378" text-anchor="middle" fill="#2d6a47" font-family="DM Mono, monospace" font-size="10" font-weight="600" letter-spacing="1">CONTROL DEFICIENCY</text>
+      <text x="380" y="395" text-anchor="middle" fill="#4a9968" font-family="DM Mono, monospace" font-size="9" letter-spacing="1">Communicate to Management</text>
+    </svg>
+  </div>
+
+  <!-- Interactive step-through -->
+  <div class="tree-interactive">
+    <h3>Step-by-Step Analysis Guide — Click each step to expand</h3>
+    <div class="tree-steps" id="tree-steps">
+      <!-- populated by JS -->
+    </div>
+    <div class="tree-detail-panel" id="tree-detail"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PANEL 3 — SCENARIO CLASSIFIER
+════════════════════════════════════════ -->
+<div class="panel" id="panel-scenarios">
+  <div class="scenario-header-row">
+    <div>
+      <div class="section-title">Classify the Scenario</div>
+      <div class="section-sub">Read each case · Apply PCAOB AS 2201 · Select the correct tier</div>
+    </div>
+    <div class="score-display">Score: <span id="sc-score">—</span></div>
+  </div>
+
+  <div class="scenario-layout">
+    <div>
+      <div class="scenario-card" id="scenario-card"></div>
+      <div class="sc-nav">
+        <button class="sc-nav-btn" id="sc-prev" onclick="scNav(-1)" disabled>← Previous</button>
+        <div class="progress-dots" id="sc-dots"></div>
+        <button class="sc-nav-btn" id="sc-next" onclick="scNav(1)">Next →</button>
+      </div>
+    </div>
+    <div>
+      <div class="classify-sidebar">
+        <h3>Your Classification</h3>
+        <div class="classify-btns">
+          <button class="classify-btn cb-d" onclick="doClassify('D')">
+            <span class="btn-icon"></span>Control Deficiency
+          </button>
+          <button class="classify-btn cb-s" onclick="doClassify('S')">
+            <span class="btn-icon"></span>Significant Deficiency
+          </button>
+          <button class="classify-btn cb-m" onclick="doClassify('M')">
+            <span class="btn-icon"></span>Material Weakness
+          </button>
+        </div>
+        <div class="feedback-panel" id="sc-feedback"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PANEL 4 — QUIZ
+════════════════════════════════════════ -->
+<div class="panel" id="panel-quiz">
+  <div class="section-title">Concept Assessment</div>
+  <div class="section-sub">10 questions · PCAOB AS 2201 · Auditing standards &amp; application</div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-fill" style="width:0%"></div></div>
+    <div id="quiz-body"></div>
+    <div class="quiz-final" id="quiz-final">
+      <div class="qf-label">Final Score</div>
+      <div class="qf-grade" id="qf-grade"></div>
+      <p class="qf-msg" id="qf-msg"></p>
+      <button class="qf-retry" onclick="initQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ═══════════════════════════════ NAVIGATION ═══════════════════════
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ═══════════════════════════════ TREE DATA ════════════════════════
+const treeSteps = [
+  {
+    num: 1,
+    title: "Identify the Type of Control Deficiency",
+    threshold: null,
+    summary: "Determine whether you have a design deficiency or an operating deficiency.",
+    detail: `<strong>Design Deficiency:</strong> A control necessary to prevent or detect misstatements is missing, or an existing control is not properly designed — even if it operates as designed, it won't achieve its objective.<br><br>
+<strong>Operating Deficiency:</strong> A properly designed control does not operate as designed, or the person performing the control lacks authority or competence to do so effectively.<br><br>
+<em>Example of design:</em> No control exists to verify vendor bank account changes before payment runs — the process is missing a step.<br>
+<em>Example of operating:</em> A three-way match control exists in the ERP but buyers routinely override it without approval.`
+  },
+  {
+    num: 2,
+    title: "Assess Likelihood — Is Reasonable Possibility of Material Misstatement Present?",
+    threshold: "m",
+    summary: "If YES → Material Weakness. 'Reasonable possibility' means more than remote — it does not require probable.",
+    detail: `This is the <strong>most important threshold</strong> in the entire framework. PCAOB defines "reasonable possibility" as more than remote — it explicitly states the likelihood need not be probable.<br><br>
+<strong>Practical guidance:</strong> Ask whether a thoughtful, knowledgeable person would consider it more than a slight chance that a material misstatement could slip through this control gap undetected — on either annual or interim financial statements.<br><br>
+<strong>Common misconception:</strong> Many students (and practitioners) apply a "probable" standard. PCAOB rejected this. If the risk is more than remote and the potential misstatement is material, the analysis ends here: <span style="color:var(--red);font-weight:600">Material Weakness</span>.<br><br>
+<strong>Factors increasing likelihood:</strong> High transaction volume through the control, management override ability, subjective or complex estimates, history of errors or fraud.`
+  },
+  {
+    num: 3,
+    title: "Evaluate Magnitude — Could the Potential Misstatement Be Material?",
+    threshold: "m",
+    summary: "If likelihood is more-than-remote AND magnitude is material → Material Weakness confirmed.",
+    detail: `Magnitude means whether the potential misstatement — if it occurred — would be material to the financial statements. Use quantitative materiality (e.g., 5% of pre-tax income) as a guide but do not ignore qualitative factors.<br><br>
+<strong>Qualitative materiality examples:</strong> A small misstatement in a segment that barely meets a debt covenant threshold may be qualitatively material. Fraud-related misstatements are typically qualitatively material regardless of dollar amount.<br><br>
+<strong>Interaction with likelihood:</strong> Both likelihood AND magnitude matter for MW. A control gap with very high likelihood but trivially small potential misstatement may not clear the material threshold. However, note that a reasonable possibility of a <em>material</em> misstatement is sufficient — you don't need certainty or even probability.`
+  },
+  {
+    num: 4,
+    title: "If Not MW — Is There More-Than-Remote Risk of More-Than-Inconsequential Misstatement?",
+    threshold: "s",
+    summary: "If YES → Significant Deficiency. The misstatement would be noticeable/important but not material.",
+    detail: `A Significant Deficiency exists when a control gap creates more-than-remote likelihood of a misstatement that would be <em>more-than-inconsequential</em> but <em>less than material</em>.<br><br>
+<strong>"More-than-inconsequential"</strong> means a knowledgeable investor or financial statement user would consider it noteworthy — not material, but not trivial either. Think of it as a meaningful gap in one area that warrants the audit committee's attention.<br><br>
+<strong>Communication requirement:</strong> Unlike material weaknesses (which are publicly disclosed), significant deficiencies are communicated in writing to the audit committee. They do not trigger an adverse ICFR opinion but they must be formally documented and communicated.<br><br>
+<em>Example:</em> A payroll clerk can add fictitious employees but there is a quarterly management review of headcount that would likely catch this — reducing likelihood below MW but not eliminating it entirely.`
+  },
+  {
+    num: 5,
+    title: "If Neither — Conclude Control Deficiency; Consider Aggregation",
+    threshold: "d",
+    summary: "Control Deficiency: communicate to management. But always evaluate whether deficiencies aggregate to a higher tier.",
+    detail: `If the deficiency does not rise to SD or MW, it is a <strong>Control Deficiency</strong> — still a finding that management should remediate, but it does not require written audit committee communication and does not affect the ICFR opinion.<br><br>
+<strong>Critical: Aggregation (AS 2201.65–.67)</strong> — This is one of the most testable and practically significant concepts. Multiple control deficiencies that each, individually, are control deficiencies must be evaluated <em>together</em>. If the aggregated exposure creates a reasonable possibility of material misstatement, the combination is a material weakness.<br><br>
+<strong>Aggregation triggers:</strong> Deficiencies in the same process (e.g., multiple AP weaknesses), affecting the same accounts, or creating complementary fraud opportunities are particularly important to aggregate.<br><br>
+<em>Example:</em> Three "minor" AP deficiencies — weak vendor setup controls, missing payment authorization on small invoices, and lack of duplicate payment detection — individually assessed as control deficiencies might aggregate to a significant deficiency or material weakness when evaluated together.`
+  }
+];
+
+function initTree() {
+  const container = document.getElementById('tree-steps');
+  container.innerHTML = treeSteps.map((step, i) => `
+    <div class="tree-step" id="tstep-${i}" onclick="toggleTreeStep(${i})">
+      <div class="tree-step-num">${step.num}</div>
+      <div class="tree-step-content">
+        <h4>${step.title}</h4>
+        <p>${step.summary}</p>
+        ${step.threshold ? `<span class="step-threshold ${step.threshold}">${step.threshold === 'm' ? 'Material Weakness Threshold' : step.threshold === 's' ? 'Significant Deficiency Threshold' : 'Control Deficiency'}</span>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+let activeTreeStep = -1;
+function toggleTreeStep(idx) {
+  const detail = document.getElementById('tree-detail');
+  const steps = document.querySelectorAll('.tree-step');
+  if (activeTreeStep === idx) {
+    steps[idx].classList.remove('active');
+    detail.className = 'tree-detail-panel';
+    activeTreeStep = -1;
+    return;
+  }
+  steps.forEach(s => s.classList.remove('active'));
+  steps[idx].classList.add('active');
+  detail.innerHTML = treeSteps[idx].detail;
+  detail.className = 'tree-detail-panel show';
+  activeTreeStep = idx;
+  detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ═══════════════════════════════ SCENARIO DATA ════════════════════
+const scenarios = [
+  {
+    title: "Revenue Journal Entry Override",
+    company: "TechCo Inc. · Public · Materiality $900K",
+    body: "The CFO has the ability to manually post journal entries directly to revenue accounts without secondary review or approval. In Q3, internal audit found 3 such entries totaling $2.4M, all lacking documentation. No evidence of fraud was identified, but management cannot explain the business purpose for two of the entries.",
+    tags: ["Revenue Recognition", "Manual JEs", "Segregation of Duties", "Management Override"],
+    answer: "M",
+    explanation: `<strong>Material Weakness.</strong> Multiple compounding factors: (1) the CFO has unchecked ability to post to a high-risk account — a textbook segregation-of-duties failure at a senior level; (2) $2.4M in undocumented entries far exceeds the $900K materiality threshold; (3) management override of controls at the senior level is an AS 2201.69 strong indicator; (4) the inability to explain entries further reduces detection reliability. The reasonable possibility of material misstatement is clear. Correct answer: <strong>MW</strong>.`
+  },
+  {
+    title: "Inventory Cycle Count Reconciliation Delays",
+    company: "RetailChain Corp · Public · Materiality $4.2M · Inventory $340M",
+    body: "Policy requires cycle count differences to be reconciled within 5 business days. Testing found 8 of 42 locations completed reconciliations 8–12 days late. No inventory adjustments exceeding $50K were required across all locations. The delay issue appears limited to three regional managers who misunderstood the policy.",
+    tags: ["Inventory", "Reconciliation", "Operating Effectiveness"],
+    answer: "S",
+    explanation: `<strong>Significant Deficiency.</strong> The operating weakness is real and affects approximately 19% of locations — not isolated. However: (1) No material adjustments were identified, suggesting actual inventory integrity is maintained; (2) the delays were modest (days, not weeks or months); (3) reconciliations were ultimately completed; and (4) the root cause is identifiable and remediable. The exposure is more-than-remote but the evidence doesn't support reasonable possibility of a material misstatement given the actual results. The deficiency warrants audit committee attention. Correct answer: <strong>SD</strong>.`
+  },
+  {
+    title: "Forgotten Expense Report Signatures",
+    company: "ServiceCo LLC · Private · Materiality $180K",
+    body: "Policy requires supervisor sign-off on expense reports over $500 before reimbursement. Testing a sample of 60 reports found 4 (totaling $2,400) were processed without the required signature. All 4 were reviewed post-hoc by the controller and appeared reasonable. Annual expense reimbursements total $1.2M.",
+    tags: ["Expense Reimbursements", "Approval Controls", "Operating Effectiveness"],
+    answer: "D",
+    explanation: `<strong>Control Deficiency.</strong> The 4 exceptions represent ~6.7% of the sample, which is noteworthy operationally, but: (1) the total dollar value ($2,400) is immaterial relative to $180K materiality and $1.2M total spend; (2) post-hoc controller review confirmed the expenses were appropriate; (3) a compensating oversight mechanism functioned effectively; and (4) there is no more-than-remote likelihood of a more-than-inconsequential misstatement in these facts. Communicate to management for remediation, but this does not rise above Control Deficiency. Correct answer: <strong>CD</strong>.`
+  },
+  {
+    title: "Goodwill Impairment Dated After Balance Sheet",
+    company: "AcquisitionCorp · Public · Materiality $12M · Goodwill $280M",
+    body: "The annual goodwill impairment test was completed 45 days after fiscal year-end, using year-end balances but incorporating post-balance-sheet updates to discount rates and projections. The auditor cannot determine whether the test outcome would differ materially had it been conducted as of the balance sheet date. The reporting unit operates in a volatile industry.",
+    tags: ["Goodwill Impairment", "Complex Estimates", "Financial Reporting", "Testing Date"],
+    answer: "M",
+    explanation: `<strong>Material Weakness.</strong> The impairment test used the wrong measurement date — a fundamental flaw in a high-dollar, subjective estimate. Key factors: (1) $280M goodwill with $12M materiality creates enormous leverage; (2) the auditor's inability to determine whether the outcome would differ is itself evidence of reasonable possibility of misstatement — the uncertainty is the risk; (3) mixed-period assumptions introduce unreliability into the analysis; and (4) volatile industry increases the sensitivity of the inputs. When auditors cannot reliably affirm the integrity of a key estimate, material weakness is the typical conclusion. Correct answer: <strong>MW</strong>.`
+  },
+  {
+    title: "Vendor Master File Edit Access",
+    company: "DistributorCo · Private · Moderate Risk Profile",
+    body: "Accounts payable clerks who process and approve invoices also have edit access to the vendor master file, including the ability to change vendor bank account numbers. Management runs a monthly report of new vendor additions, which is reviewed and approved. However, the monthly report does not capture changes to existing vendor bank account numbers.",
+    tags: ["Accounts Payable", "Segregation of Duties", "Fraud Risk", "Access Controls"],
+    answer: "S",
+    explanation: `<strong>Significant Deficiency.</strong> The combination of invoice processing authority and vendor master editing rights creates a classic fraud-enabling SoD failure — an AP clerk could redirect payments to a fraudulent account with no preventive control. The monthly review is a partial compensating control for new vendors but explicitly does not address bank account changes, leaving the highest-risk sub-process unmonitored. This exceeds a simple deficiency because of the fraud susceptibility, but for a private company, without evidence of actual misstatement and with a partial monitoring control, reasonable possibility of material misstatement is not clearly established. Correct answer: <strong>SD</strong>.`
+  },
+  {
+    title: "IT Can Modify ERP Financial Records",
+    company: "ManufacturingCo · Public · Large ERP Environment",
+    body: "The IT department has unrestricted ability to modify transaction data, journal entries, and account balances directly within the ERP system used for financial reporting. No compensating detective controls (e.g., database change logs reviewed by a non-IT party) exist. The ERP processes substantially all financial transactions, including revenue, inventory, and payables.",
+    tags: ["IT General Controls", "ERP Access", "Pervasive Risk", "Financial Reporting"],
+    answer: "M",
+    explanation: `<strong>Material Weakness.</strong> ITGC failures of this nature are pervasive: the ERP processes substantially all financial transactions, and IT's unrestricted ability to modify data — without any detective compensating control — means that the integrity of the entire automated control environment cannot be relied upon. PCAOB auditors cannot rely on automated application controls when the underlying system can be modified without oversight. The scope (all major financial cycles) and lack of any compensating control creates a clear reasonable possibility of material misstatement across multiple financial statement areas. Correct answer: <strong>MW</strong>.`
+  },
+  {
+    title: "Bank Reconciliation Prepared by Cash Receipts Clerk",
+    company: "DistributionCo · Private · Low Fraud History",
+    body: "The accounts receivable clerk who records all cash receipts also prepares the monthly bank reconciliation. A senior accountant independently reviews and approves the reconciliation each month. The clerk cannot post GL adjustments. All reconciliations for the year were timely and no reconciling items aged beyond 30 days.",
+    tags: ["Cash", "Bank Reconciliation", "Segregation of Duties", "Compensating Controls"],
+    answer: "D",
+    explanation: `<strong>Control Deficiency.</strong> There is a SoD concern — the clerk recording receipts also prepares the reconciliation that could conceal errors. However, the risk is substantially mitigated by: (1) a senior accountant independently reviews and approves the reconciliation; (2) the clerk lacks GL posting access, limiting their ability to conceal errors; and (3) all reconciliations were timely and clean. For a private company, this is a common, relatively low-risk configuration where the compensating review control is the critical mitigant. No more-than-remote likelihood of even inconsequential misstatement. Correct answer: <strong>CD</strong>.`
+  },
+  {
+    title: "Depreciation Formula Error — Detected by Internal Audit",
+    company: "MfgCorp · Public · Materiality $3.5M",
+    body: "Internal audit discovered in Q4 that the fixed asset depreciation spreadsheet contained a formula error present since Q2. The error caused depreciation to be understated by $4.8M. Management corrected the error before the financial statements were issued. The external auditor's procedures had not yet covered this area.",
+    tags: ["Fixed Assets", "Spreadsheet Controls", "Internal Audit", "Misstatement Detected"],
+    answer: "M",
+    explanation: `<strong>Material Weakness.</strong> Two AS 2201.69 strong indicators are simultaneously present: (1) the $4.8M understatement exceeds $3.5M materiality; and (2) the material misstatement was detected by internal audit — not management's normal operational controls. The ICFR assessment is as-of the balance sheet date — the fact that management corrected the error before issuance does not remediate the weakness. The weakness existed throughout Q2–Q4 undetected. The error persisting for two full quarters further evidences that monitoring controls were ineffective. Correction does not equal remediation under PCAOB standards. Correct answer: <strong>MW</strong>.`
+  }
+];
+
+let scIdx = 0;
+let scAnswers = new Array(scenarios.length).fill(null);
+
+function renderScenario() {
+  const s = scenarios[scIdx];
+  const a = scAnswers[scIdx];
+  const card = document.getElementById('scenario-card');
+
+  let cardClass = 'scenario-card';
+  if (a) cardClass += a.correct ? ' answered-correct' : ' answered-wrong';
+
+  card.className = cardClass;
+  card.innerHTML = `
+    <div class="sc-meta">
+      <div class="sc-num">Scenario ${scIdx + 1} of ${scenarios.length}</div>
+      <div class="sc-company">${s.company}</div>
+    </div>
+    <h3>${s.title}</h3>
+    <div class="sc-body">${s.body}</div>
+    <div class="sc-tags">${s.tags.map(t => `<span class="sc-tag">${t}</span>`).join('')}</div>
+  `;
+
+  // buttons
+  document.querySelectorAll('.classify-btn').forEach(b => {
+    b.disabled = !!a;
+    b.style.opacity = a ? '0.45' : '1';
+  });
+
+  // feedback
+  const fb = document.getElementById('sc-feedback');
+  if (a) {
+    const labels = { D: 'Control Deficiency', S: 'Significant Deficiency', M: 'Material Weakness' };
+    fb.className = 'feedback-panel show ' + (a.correct ? 'correct' : 'wrong');
+    fb.innerHTML = `
+      <div class="fb-verdict ${a.correct ? 'v-correct' : 'v-wrong'}">
+        ${a.correct ? '✓ Correct' : '✗ Incorrect'}
+        ${!a.correct ? `<span class="correct-answer-tag">Correct: ${labels[s.answer]}</span>` : ''}
+      </div>
+      ${s.explanation}
+    `;
+  } else {
+    fb.className = 'feedback-panel';
+    fb.innerHTML = '';
+  }
+
+  // nav buttons
+  document.getElementById('sc-prev').disabled = scIdx === 0;
+  document.getElementById('sc-next').disabled = scIdx === scenarios.length - 1;
+
+  renderScDots();
+  updateScScore();
+}
+
+function renderScDots() {
+  const row = document.getElementById('sc-dots');
+  row.innerHTML = scenarios.map((_, i) => {
+    let cls = 'pdot';
+    if (i === scIdx) cls += ' cur';
+    else if (scAnswers[i]) cls += scAnswers[i].correct ? ' ok' : ' bad';
+    return `<div class="${cls}" onclick="scJump(${i})" title="Scenario ${i+1}"></div>`;
+  }).join('');
+}
+
+function updateScScore() {
+  const ans = scAnswers.filter(a => a !== null);
+  const correct = ans.filter(a => a.correct).length;
+  const el = document.getElementById('sc-score');
+  if (ans.length === 0) { el.innerHTML = '—'; return; }
+  el.innerHTML = `${correct}/${ans.length}`;
+}
+
+function doClassify(choice) {
+  const s = scenarios[scIdx];
+  scAnswers[scIdx] = { choice, correct: choice === s.answer };
+  renderScenario();
+}
+function scNav(dir) { scIdx += dir; renderScenario(); }
+function scJump(i) { scIdx = i; renderScenario(); }
+
+// ═══════════════════════════════ QUIZ DATA ════════════════════════
+const quizData = [
+  {
+    q: "Under PCAOB AS 2201, the 'reasonable possibility' threshold for material weakness is best described as:",
+    opts: [
+      "The likelihood of misstatement must be probable (greater than 50%)",
+      "The likelihood must be more than remote, but need not be probable",
+      "The auditor must identify an actual, uncorrected misstatement",
+      "The likelihood must be at least 25% based on risk quantification"
+    ],
+    ans: 1,
+    expl: `<strong>B is correct.</strong> PCAOB AS 2201.09 defines "reasonable possibility" as <em>more than remote</em> and expressly states the likelihood need not be probable. This lower threshold is intentional — it reflects the prophylactic purpose of ICFR: catching problems before they cause actual misstatements. Choices A and D impose a higher standard than PCAOB requires. Choice C conflates material weakness with the discovery of an actual error (though that may be an indicator, it is not required).`
+  },
+  {
+    q: "An external auditor identifies a $5.2M misstatement in revenue (materiality: $4.0M) that management's ICFR processes failed to detect. Management corrects it before issuing the financial statements. The correct ICFR conclusion is:",
+    opts: [
+      "Control Deficiency — the correction demonstrates controls ultimately worked",
+      "Significant Deficiency — the auditor caught it before it became public",
+      "Material Weakness — auditor detection of a material misstatement is an AS 2201.69 indicator",
+      "No deficiency — management fulfilled their responsibility through correction"
+    ],
+    ans: 2,
+    expl: `<strong>C is correct.</strong> AS 2201.69 specifically identifies the auditor identifying a material misstatement not initially caught by the entity as a strong indicator of material weakness. The ICFR assessment date is the balance sheet date — if controls were ineffective then, subsequent correction does not cure the material weakness. The ICFR opinion reflects the state of controls during the period, not management's remediation response after discovery. This is a heavily tested concept on the CPA exam and in practice.`
+  },
+  {
+    q: "Three control deficiencies in the accounts payable process are each individually assessed as control deficiencies. Which best describes the auditor's required next step?",
+    opts: [
+      "Report all three to management; aggregation is not required for control deficiencies",
+      "Evaluate the three deficiencies in combination; the aggregate exposure may rise to SD or MW",
+      "Automatically classify the combination as a significant deficiency when three or more deficiencies exist",
+      "Aggregate only if the deficiencies affect the same financial statement assertion"
+    ],
+    ans: 1,
+    expl: `<strong>B is correct.</strong> AS 2201.65–.67 requires auditors to evaluate whether multiple deficiencies, when considered together, constitute a more severe finding. There is no bright-line rule based on count (Choice C is wrong). Aggregation applies across related processes and accounts, not only the same assertion (Choice D is too narrow). The combined exposure from three AP weaknesses — vendor setup, payment authorization, and duplicate detection — could together create a reasonable possibility of material misstatement.`
+  },
+  {
+    q: "Which scenario best illustrates a design deficiency (as opposed to an operating deficiency)?",
+    opts: [
+      "A three-way match control exists but buyers frequently override it without supervisor approval",
+      "A bank reconciliation is required monthly but was only completed 8 of 12 months",
+      "The company has no control requiring secondary approval for journal entries above $50K",
+      "An IT access control is properly designed but was not applied to two new users"
+    ],
+    ans: 2,
+    expl: `<strong>C is correct.</strong> A design deficiency exists when a <em>necessary control is absent</em> or when a control exists but is not designed to prevent or detect misstatements. Here, the control itself doesn't exist. Choices A, B, and D all describe controls that exist in design but fail in their operation — the control is there, it just isn't working as intended. This distinction matters for remediation (you cannot test the operating effectiveness of a control that doesn't exist in design).`
+  },
+  {
+    q: "Significant deficiencies must be communicated in writing to which party, and by when?",
+    opts: [
+      "Management — at any time before the next annual audit begins",
+      "The audit committee — before the audit report is issued",
+      "Both management and the SEC — within 4 business days of identification",
+      "The full board of directors — at the next regularly scheduled board meeting"
+    ],
+    ans: 1,
+    expl: `<strong>B is correct.</strong> Under AS 2201, significant deficiencies must be communicated in writing to the <em>audit committee</em> (not the full board, not management alone, and not the SEC) before the auditor's report date. Material weaknesses carry the additional requirement of public disclosure in management's annual report on ICFR. Choice C describes the 8-K disclosure timeline for material weaknesses — a separate requirement under SEC rules, and it applies to MW, not SD.`
+  },
+  {
+    q: "A company hires an outside valuation specialist to value a complex Level 3 derivative. The specialist's methodology is sound. However, management lacks the expertise to review or challenge the specialist's key inputs and assumptions. The derivative's fair value is $18M; materiality is $4.5M. Most likely classification:",
+    opts: [
+      "No deficiency — management satisfied their responsibility by engaging a qualified expert",
+      "Control Deficiency — management oversight of specialists is a minor procedural matter",
+      "Significant Deficiency — oversight is important but the expert provides sufficient coverage",
+      "Material Weakness — management cannot review a material, subjective estimate for reasonableness"
+    ],
+    ans: 3,
+    expl: `<strong>D is correct.</strong> Management cannot outsource its financial reporting responsibility to a specialist. PCAOB requires that management have, or obtain, the competence to oversee and challenge experts on significant estimates. Here, a $18M estimate (4x materiality) cannot be reliably evaluated by anyone within management — if the specialist makes an error in inputs or assumptions, there is a reasonable possibility it would go undetected. This oversight gap on a material, complex, subjective estimate is a material weakness.`
+  },
+  {
+    q: "During the audit period, a significant deficiency is identified. Two weeks before the report date, management implements a new compensating control. The auditor has no time to test its operating effectiveness. How should this be handled?",
+    opts: [
+      "The SD is remediated; no communication is required if the control design is sound",
+      "The SD must still be communicated; operating effectiveness cannot be assumed from design alone",
+      "The auditor should upgrade the finding to MW because late-stage remediation is suspicious",
+      "The auditor may use analytical procedures to substitute for operating effectiveness testing"
+    ],
+    ans: 1,
+    expl: `<strong>B is correct.</strong> Per PCAOB standards, a control not yet tested for operating effectiveness cannot receive credit for the period under audit. Management cannot receive retroactive benefit from a control that did not operate during the period being assessed. The significant deficiency must still be communicated to the audit committee. This also illustrates the importance of timely remediation — ideally, controls should be tested and operating for a meaningful period before year-end. Late implementation may be noted as a mitigating factor, but it does not cure the prior-period deficiency.`
+  },
+  {
+    q: "Which of the following is NOT listed in AS 2201.69 as a strong indicator of a material weakness?",
+    opts: [
+      "Restatement of a prior period's financial statements",
+      "The auditor identifies a material misstatement not caught by company controls",
+      "A single, isolated control deficiency in a low-dollar, immaterial account",
+      "Ineffective oversight of financial reporting by the audit committee"
+    ],
+    ans: 2,
+    expl: `<strong>C is correct.</strong> AS 2201.69 lists four primary strong indicators: (1) restatement; (2) auditor detection of material misstatement; (3) audit committee oversight failure; and (4) fraud by senior management or those responsible for ICFR. An isolated control deficiency in an immaterial account is not on the list — by definition, it would not create a reasonable possibility of material misstatement. Choices A, B, and D are all directly listed or closely aligned with listed indicators.`
+  },
+  {
+    q: "The auditor identifies that management has identified and corrected all misstatements above $25K (their internal tracking threshold) throughout the year using a quarterly detailed review. There are no uncorrected misstatements. What does this demonstrate about the auditor's ICFR conclusion?",
+    opts: [
+      "No material weakness can exist if management corrected all identified errors",
+      "The quarterly review process is a monitoring control whose effectiveness must be separately evaluated",
+      "The absence of uncorrected misstatements means ICFR is effective by definition",
+      "This demonstrates a compensating control that automatically prevents material weakness"
+    ],
+    ans: 1,
+    expl: `<strong>B is correct.</strong> The quarterly detailed review is itself a control whose design and operating effectiveness must be evaluated. Key questions: Does the review cover the right accounts and assertions? Is $25K a sufficient threshold? Does it capture all types of misstatements, including complex estimates? A monitoring control that works well can mitigate the severity of underlying deficiencies — but the auditor must evaluate the monitoring control independently, not simply infer effectiveness from the absence of misstatements in one period.`
+  },
+  {
+    q: "Control A prevents unauthorized access to the payroll master file (a preventive control). Control B is a monthly report reviewed by HR that identifies changes to the payroll master file (a detective control). If Control A fails but Control B is effective, how should the auditor evaluate severity?",
+    opts: [
+      "Control A's failure is automatically a material weakness because payroll is high-risk",
+      "The failure of Control A is still a deficiency but its severity may be mitigated by Control B's effectiveness",
+      "If Control B is effective, there is no deficiency in the payroll cycle",
+      "Preventive control failures always result in at least a significant deficiency"
+    ],
+    ans: 1,
+    expl: `<strong>B is correct.</strong> PCAOB explicitly requires auditors to consider compensating controls when assessing severity. A detective control (Control B) that reliably and promptly identifies unauthorized changes can mitigate the severity of a preventive control's failure. The auditor must evaluate how quickly Control B would catch unauthorized changes, whether its scope is sufficient, and how reliably it operates. If Control B effectively reduces the likelihood and magnitude of undetected misstatement to below the SD threshold, the deficiency may be assessed only as a control deficiency. However, if the monthly review has significant lag or coverage gaps, it may not fully compensate.`
+  }
+];
+
+let qIdx = 0;
+let qAnswers = new Array(quizData.length).fill(null);
+
+function initQuiz() {
+  qAnswers = new Array(quizData.length).fill(null);
+  qIdx = 0;
+  document.getElementById('quiz-final').className = 'quiz-final';
+  renderQuizQ();
+}
+
+function renderQuizQ() {
+  const q = quizData[qIdx];
+  const a = qAnswers[qIdx];
+  const letters = ['A','B','C','D'];
+  const pct = ((qIdx + (a !== null ? 1 : 0)) / quizData.length * 100).toFixed(0);
+  document.getElementById('quiz-fill').style.width = pct + '%';
+
+  const optsHtml = q.opts.map((opt, i) => {
+    let cls = 'quiz-opt';
+    if (a !== null) {
+      if (i === q.ans) cls += ' qo-correct';
+      else if (i === a && a !== q.ans) cls += ' qo-wrong';
+    }
+    return `<button class="${cls}" onclick="answerQ(${i})" ${a !== null ? 'disabled' : ''}>
+      <span class="opt-letter">${letters[i]}.</span>${opt}
+    </button>`;
+  }).join('');
+
+  const explHtml = a !== null ? `
+    <div class="quiz-explanation show">
+      <div class="expl-label">Explanation</div>
+      ${q.expl}
+    </div>` : `<div class="quiz-explanation"></div>`;
+
+  const correct = qAnswers.filter((x, i) => x === quizData[i].ans).length;
+
+  document.getElementById('quiz-body').innerHTML = `
+    <div class="quiz-q-text">
+      <span class="quiz-q-num">Question ${qIdx + 1} of ${quizData.length} · ${correct} correct so far</span>
+      ${q.q}
+    </div>
+    <div class="quiz-opts">${optsHtml}</div>
+    ${explHtml}
+    <div class="quiz-nav-row">
+      <div class="quiz-counter">${qIdx + 1} / ${quizData.length}</div>
+      ${a !== null ?
+        qIdx < quizData.length - 1
+          ? `<button class="quiz-next-btn" onclick="nextQ()">Next Question →</button>`
+          : `<button class="quiz-next-btn" onclick="showFinal()">View Results</button>`
+        : `<button class="quiz-next-btn" disabled>Select an answer</button>`
+      }
+    </div>
+  `;
+}
+
+function answerQ(choice) {
+  if (qAnswers[qIdx] !== null) return;
+  qAnswers[qIdx] = choice;
+  renderQuizQ();
+}
+function nextQ() { qIdx++; renderQuizQ(); }
+
+function showFinal() {
+  document.getElementById('quiz-body').innerHTML = '';
+  const correct = qAnswers.filter((x, i) => x === quizData[i].ans).length;
+  const total = quizData.length;
+  const pct = Math.round(correct / total * 100);
+  document.getElementById('quiz-fill').style.width = '100%';
+  const msgs = [
+    [0, 50, "Review the Comparison tab carefully — focus on the severity thresholds, the 'reasonable possibility' definition, and the AS 2201.69 indicators."],
+    [50, 70, "Good start. Revisit the aggregation rules (AS 2201.65–.67) and the compensating controls analysis."],
+    [70, 85, "Strong understanding of the framework. Sharpen your analysis of borderline Significant Deficiency vs. Material Weakness facts."],
+    [85, 101, "Excellent command of PCAOB AS 2201. You're ready for exam-level application of these concepts."]
+  ];
+  const msg = msgs.find(([lo, hi]) => pct >= lo && pct < hi)[2];
+  document.getElementById('qf-grade').textContent = `${correct}/${total}`;
+  document.getElementById('qf-msg').textContent = msg;
+  document.getElementById('quiz-final').className = 'quiz-final show';
+}
+
+// ═══════════════════════════════ INIT ════════════════════════
+initTree();
+renderScenario();
+initQuiz();
+</script>
+</body>
+</html>
