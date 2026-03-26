@@ -1,0 +1,682 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+
+  .course-wrap { max-width: 860px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+  .course-header { border-bottom: 0.5px solid var(--color-border-tertiary); padding-bottom: 1.25rem; margin-bottom: 1.5rem; }
+  .course-tag { display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 3px 10px; margin-bottom: 10px; }
+  .course-title { font-size: 22px; font-weight: 500; color: var(--color-text-primary); line-height: 1.3; }
+  .course-subtitle { font-size: 14px; color: var(--color-text-secondary); margin-top: 6px; }
+
+  .nav-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 1.5rem; border-bottom: 0.5px solid var(--color-border-tertiary); padding-bottom: 0; }
+  .tab-btn { font-size: 13px; font-weight: 400; color: var(--color-text-secondary); background: none; border: none; border-bottom: 2px solid transparent; padding: 8px 14px; cursor: pointer; transition: all 0.15s; white-space: nowrap; margin-bottom: -0.5px; }
+  .tab-btn:hover { color: var(--color-text-primary); }
+  .tab-btn.active { color: var(--color-text-primary); font-weight: 500; border-bottom: 2px solid var(--color-text-primary); }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── OVERVIEW ── */
+  .opinion-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .opinion-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.1rem; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+  .opinion-card:hover { border-color: var(--color-border-secondary); background: var(--color-background-secondary); }
+  .opinion-card.selected { border-color: var(--color-border-primary); background: var(--color-background-secondary); }
+  .opinion-badge { display: inline-block; font-size: 11px; font-weight: 500; border-radius: 20px; padding: 2px 9px; margin-bottom: 8px; }
+  .badge-clean { background: #EAF3DE; color: #27500A; }
+  .badge-modified { background: #FAEEDA; color: #633806; }
+  .badge-qualified { background: #FAEEDA; color: #633806; }
+  .badge-adverse { background: #FCEBEB; color: #791F1F; }
+  .badge-disclaimer { background: #F1EFE8; color: #444441; }
+  .opinion-card h3 { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .opinion-card p { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+
+  .detail-panel { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; min-height: 120px; }
+  .detail-panel h4 { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 8px; }
+  .detail-panel p { font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 8px; }
+  .detail-panel ul { padding-left: 1.2rem; }
+  .detail-panel ul li { font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; }
+  .detail-empty { color: var(--color-text-tertiary); font-size: 13px; font-style: italic; }
+
+  /* ── DECISION TREE ── */
+  .tree-wrap { overflow-x: auto; }
+  .tree-node { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 14px; background: var(--color-background-primary); font-size: 13px; cursor: pointer; transition: all 0.15s; }
+  .tree-node:hover { border-color: var(--color-border-secondary); background: var(--color-background-secondary); }
+  .tree-node.active { border-color: var(--color-border-primary); background: var(--color-background-secondary); }
+  .tree-node.outcome { cursor: default; }
+  .tree-node.outcome:hover { border-color: var(--color-border-tertiary); background: var(--color-background-primary); }
+  .tree-q { font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .tree-hint { font-size: 11px; color: var(--color-text-tertiary); }
+  .tree-choices { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .tree-choice { font-size: 12px; font-weight: 500; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 5px 12px; cursor: pointer; background: var(--color-background-primary); color: var(--color-text-primary); transition: all 0.15s; }
+  .tree-choice:hover { background: var(--color-background-secondary); }
+  .tree-choice.yes { color: #27500A; border-color: #9FE1CB; }
+  .tree-choice.yes:hover { background: #EAF3DE; }
+  .tree-choice.no { color: #791F1F; border-color: #F7C1C1; }
+  .tree-choice.no:hover { background: #FCEBEB; }
+  .outcome-label { font-size: 16px; font-weight: 500; margin-bottom: 6px; }
+  .outcome-desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+  .tree-path { margin-bottom: 1rem; }
+  .tree-path-label { font-size: 11px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .path-crumb { display: inline-block; font-size: 12px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: 20px; padding: 2px 10px; margin-right: 4px; margin-bottom: 4px; color: var(--color-text-secondary); }
+  .restart-btn { font-size: 12px; color: var(--color-text-tertiary); background: none; border: none; cursor: pointer; text-decoration: underline; margin-top: 10px; display: block; }
+  .restart-btn:hover { color: var(--color-text-secondary); }
+
+  /* ── CASE STUDIES ── */
+  .case-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+  .case-item { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; cursor: pointer; transition: all 0.15s; }
+  .case-item:hover { border-color: var(--color-border-secondary); background: var(--color-background-secondary); }
+  .case-item.open { border-color: var(--color-border-primary); }
+  .case-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .case-co { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+  .case-industry { font-size: 12px; color: var(--color-text-tertiary); }
+  .case-teaser { font-size: 13px; color: var(--color-text-secondary); margin-top: 6px; line-height: 1.6; }
+  .case-body { margin-top: 1rem; border-top: 0.5px solid var(--color-border-tertiary); padding-top: 1rem; display: none; }
+  .case-item.open .case-body { display: block; }
+  .case-body p { font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 8px; }
+  .case-body strong { font-weight: 500; color: var(--color-text-primary); }
+  .answer-reveal { margin-top: 12px; }
+  .reveal-btn { font-size: 12px; font-weight: 500; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 6px 14px; background: none; cursor: pointer; color: var(--color-text-primary); transition: all 0.15s; }
+  .reveal-btn:hover { background: var(--color-background-secondary); }
+  .reveal-answer { margin-top: 10px; background: var(--color-background-secondary); border-left: 2px solid var(--color-border-primary); border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: 10px 14px; display: none; }
+  .reveal-answer.shown { display: block; }
+  .reveal-answer p { font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 0; }
+  .reveal-answer strong { font-weight: 500; color: var(--color-text-primary); }
+
+  /* ── QUIZ ── */
+  .quiz-progress { display: flex; gap: 4px; margin-bottom: 1.5rem; }
+  .progress-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-border-secondary); transition: background 0.2s; }
+  .progress-dot.done { background: var(--color-text-primary); }
+  .progress-dot.current { background: var(--color-text-secondary); }
+  .quiz-q { font-size: 16px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 0.25rem; line-height: 1.5; }
+  .quiz-scenario { font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 1.25rem; background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; border: 0.5px solid var(--color-border-tertiary); }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .quiz-opt { text-align: left; font-size: 13px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; cursor: pointer; background: var(--color-background-primary); color: var(--color-text-primary); transition: all 0.15s; line-height: 1.5; }
+  .quiz-opt:hover:not(:disabled) { background: var(--color-background-secondary); border-color: var(--color-border-primary); }
+  .quiz-opt.correct { background: #EAF3DE; border-color: #9FE1CB; color: #27500A; }
+  .quiz-opt.incorrect { background: #FCEBEB; border-color: #F7C1C1; color: #791F1F; }
+  .quiz-opt.reveal-correct { background: #EAF3DE; border-color: #9FE1CB; color: #27500A; }
+  .quiz-feedback { font-size: 13px; line-height: 1.7; padding: 10px 14px; border-radius: var(--border-radius-md); margin-bottom: 1rem; display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: #EAF3DE; color: #27500A; }
+  .quiz-feedback.incorrect { background: #FCEBEB; color: #791F1F; }
+  .quiz-nav { display: flex; gap: 8px; align-items: center; }
+  .quiz-nav-btn { font-size: 13px; font-weight: 500; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 8px 18px; cursor: pointer; background: none; color: var(--color-text-primary); transition: all 0.15s; }
+  .quiz-nav-btn:hover { background: var(--color-background-secondary); }
+  .quiz-nav-btn:disabled { opacity: 0.35; cursor: default; }
+  .quiz-count { font-size: 12px; color: var(--color-text-tertiary); }
+  .quiz-score { text-align: center; padding: 2rem 1rem; }
+  .score-num { font-size: 48px; font-weight: 500; color: var(--color-text-primary); line-height: 1; }
+  .score-label { font-size: 14px; color: var(--color-text-secondary); margin-top: 8px; margin-bottom: 1.5rem; }
+  .score-grade { font-size: 18px; font-weight: 500; margin-bottom: 0.5rem; }
+  .score-msg { font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; }
+  .retry-btn { font-size: 13px; font-weight: 500; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 8px 18px; cursor: pointer; background: none; color: var(--color-text-primary); margin-top: 1.25rem; transition: all 0.15s; }
+  .retry-btn:hover { background: var(--color-background-secondary); }
+
+  /* ── STANDARDS ── */
+  .standards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 580px) { .standards-grid { grid-template-columns: 1fr; } }
+  .std-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+  .std-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .std-icon { width: 32px; height: 32px; border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; flex-shrink: 0; }
+  .std-icon.pcaob { background: #E6F1FB; color: #0C447C; }
+  .std-icon.iaasb { background: #EAF3DE; color: #27500A; }
+  .std-icon.gaas { background: #EEEDFE; color: #3C3489; }
+  .std-icon.sec { background: #FAEEDA; color: #633806; }
+  .std-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+  .std-full { font-size: 11px; color: var(--color-text-tertiary); }
+  .std-items { list-style: none; padding: 0; }
+  .std-items li { font-size: 12px; color: var(--color-text-secondary); line-height: 1.7; border-top: 0.5px solid var(--color-border-tertiary); padding: 5px 0; }
+  .std-items li:first-child { border-top: none; }
+  .std-note { font-size: 12px; color: var(--color-text-tertiary); margin-top: 10px; line-height: 1.6; font-style: italic; }
+
+  .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-text-tertiary); font-weight: 500; margin-bottom: 10px; }
+  .divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1.5rem 0; }
+</style>
+
+<div class="course-wrap">
+  <div class="course-header">
+    <div class="course-tag">ACCT 420 — Advanced Auditing</div>
+    <div class="course-title">Audit Opinions & Report Modifications</div>
+    <div class="course-subtitle">Module 7 — Interactive Learning Experience &nbsp;·&nbsp; Prof. Claude &nbsp;·&nbsp; Spring 2026</div>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+    <button class="tab-btn" onclick="showTab('tree')">Decision Framework</button>
+    <button class="tab-btn" onclick="showTab('cases')">Case Studies</button>
+    <button class="tab-btn" onclick="showTab('quiz')">Assessment</button>
+    <button class="tab-btn" onclick="showTab('standards')">Standards Reference</button>
+  </div>
+
+  <!-- ══ OVERVIEW ══ -->
+  <div id="tab-overview" class="section active">
+    <div class="section-label">Five opinion types — click each to explore</div>
+    <div class="opinion-grid">
+      <div class="opinion-card" onclick="selectOpinion('unmodified')">
+        <span class="opinion-badge badge-clean">Unmodified</span>
+        <h3>Unqualified / Clean</h3>
+        <p>Financial statements present fairly in all material respects.</p>
+      </div>
+      <div class="opinion-card" onclick="selectOpinion('em')">
+        <span class="opinion-badge badge-modified">Modified w/ EOM</span>
+        <h3>Emphasis of Matter</h3>
+        <p>Opinion unmodified; auditor draws attention to a specific matter.</p>
+      </div>
+      <div class="opinion-card" onclick="selectOpinion('qualified')">
+        <span class="opinion-badge badge-qualified">Qualified</span>
+        <h3>Except For</h3>
+        <p>Material but not pervasive misstatement or scope limitation.</p>
+      </div>
+      <div class="opinion-card" onclick="selectOpinion('adverse')">
+        <span class="opinion-badge badge-adverse">Adverse</span>
+        <h3>Do Not Present Fairly</h3>
+        <p>Misstatements are material and pervasive to the statements.</p>
+      </div>
+      <div class="opinion-card" onclick="selectOpinion('disclaimer')">
+        <span class="opinion-badge badge-modified">Disclaimer</span>
+        <h3>No Opinion</h3>
+        <p>Scope so limited that no opinion can be expressed.</p>
+      </div>
+    </div>
+
+    <div class="detail-panel" id="opinion-detail">
+      <p class="detail-empty">Select an opinion type above to see its characteristics, when it applies, and key language.</p>
+    </div>
+
+    <hr class="divider">
+    <div class="section-label">Modification triggers</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+      <div style="border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem;">
+        <div style="font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 8px;">Material Misstatement</div>
+        <div style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.7;">Financial statements contain amounts or disclosures that are materially misstated. Includes departures from GAAP/IFRS, inadequate disclosures, and inappropriate accounting policies. Leads to <strong>Qualified</strong> (material, not pervasive) or <strong>Adverse</strong> (material and pervasive).</div>
+      </div>
+      <div style="border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem;">
+        <div style="font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 8px;">Scope Limitation</div>
+        <div style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.7;">Auditor unable to obtain sufficient appropriate audit evidence for a material area. Can be client-imposed or circumstantial (e.g., lost records, inaccessible inventory). Leads to <strong>Qualified</strong> (material, not pervasive) or <strong>Disclaimer</strong> (material and pervasive).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DECISION TREE ══ -->
+  <div id="tab-tree" class="section">
+    <div class="section-label">Step through the auditor's decision process</div>
+    <div class="tree-path" id="tree-path" style="display:none;">
+      <div class="tree-path-label">Path so far</div>
+      <div id="path-crumbs"></div>
+    </div>
+    <div id="tree-node-wrap"></div>
+    <button class="restart-btn" id="restart-btn" onclick="startTree()" style="display:none;">↺ Start over</button>
+  </div>
+
+  <!-- ══ CASE STUDIES ══ -->
+  <div id="tab-cases" class="section">
+    <div class="section-label">Analyze each scenario — determine the appropriate opinion</div>
+    <div class="case-list" id="case-list"></div>
+  </div>
+
+  <!-- ══ QUIZ ══ -->
+  <div id="tab-quiz" class="section">
+    <div id="quiz-inner"></div>
+  </div>
+
+  <!-- ══ STANDARDS ══ -->
+  <div id="tab-standards" class="section">
+    <div class="section-label">Governing standards framework</div>
+    <div class="standards-grid">
+      <div class="std-card">
+        <div class="std-header">
+          <div class="std-icon pcaob">AS</div>
+          <div>
+            <div class="std-name">PCAOB</div>
+            <div class="std-full">Public Company Accounting Oversight Board</div>
+          </div>
+        </div>
+        <ul class="std-items">
+          <li><strong>AS 3101</strong> — The Auditor's Report on an Audit of Financial Statements</li>
+          <li><strong>AS 2101</strong> — Audit Planning</li>
+          <li><strong>AS 2105</strong> — Consideration of Materiality</li>
+          <li><strong>AS 2810</strong> — Evaluating Audit Results</li>
+          <li>Applies to SEC registrants and public company audits in the U.S.</li>
+        </ul>
+        <div class="std-note">PCAOB requires a two-paragraph structure for the opinion (opinion paragraph + basis for opinion) and disclosure of Critical Audit Matters (CAMs) for large accelerated filers.</div>
+      </div>
+      <div class="std-card">
+        <div class="std-header">
+          <div class="std-icon iaasb">ISA</div>
+          <div>
+            <div class="std-name">IAASB / ISA</div>
+            <div class="std-full">International Standards on Auditing</div>
+          </div>
+        </div>
+        <ul class="std-items">
+          <li><strong>ISA 700</strong> — Forming an Opinion and Reporting</li>
+          <li><strong>ISA 701</strong> — Key Audit Matters (KAMs)</li>
+          <li><strong>ISA 705</strong> — Modifications to the Opinion</li>
+          <li><strong>ISA 706</strong> — Emphasis of Matter / Other Matter Paragraphs</li>
+          <li>Adopted by 130+ countries; basis for most global audits</li>
+        </ul>
+        <div class="std-note">ISA 705 provides the primary framework distinguishing qualified, adverse, and disclaimer opinions based on the nature and pervasiveness of the issue.</div>
+      </div>
+      <div class="std-card">
+        <div class="std-header">
+          <div class="std-icon gaas">AU-C</div>
+          <div>
+            <div class="std-name">AICPA / GAAS</div>
+            <div class="std-full">Generally Accepted Auditing Standards</div>
+          </div>
+        </div>
+        <ul class="std-items">
+          <li><strong>AU-C 700</strong> — Forming an Opinion and Reporting</li>
+          <li><strong>AU-C 705</strong> — Modifications to the Opinion</li>
+          <li><strong>AU-C 706</strong> — Emphasis of Matter / Other Matter</li>
+          <li><strong>AU-C 570</strong> — Going Concern</li>
+          <li>Applies to non-public company audits in the U.S.</li>
+        </ul>
+        <div class="std-note">AICPA standards are largely converged with ISA but maintained separately. Going concern uncertainty triggers an EOM paragraph under AU-C 570.</div>
+      </div>
+      <div class="std-card">
+        <div class="std-header">
+          <div class="std-icon sec">SEC</div>
+          <div>
+            <div class="std-name">SEC Requirements</div>
+            <div class="std-full">Securities and Exchange Commission</div>
+          </div>
+        </div>
+        <ul class="std-items">
+          <li><strong>Regulation S-X</strong> — Form and content of financial statements</li>
+          <li><strong>Staff Accounting Bulletins</strong> — SEC staff interpretations</li>
+          <li>Requires PCAOB standards for all registrants</li>
+          <li>Non-standard opinions may trigger comment letters</li>
+          <li>Going concern opinions can trigger trading halts / default provisions</li>
+        </ul>
+        <div class="std-note">A modified opinion on a public company filing is an SEC disclosure event and can have significant market consequences beyond the audit itself.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const opinionData = {
+  unmodified: {
+    title: 'Unmodified (Unqualified / "Clean") Opinion',
+    badge: 'badge-clean',
+    badgeText: 'Unmodified',
+    when: 'Financial statements present fairly, in all material respects, the financial position of the entity in accordance with the applicable financial reporting framework (GAAP or IFRS). No material misstatements. Sufficient appropriate audit evidence obtained.',
+    language: '"In our opinion, the financial statements referred to above present fairly, in all material respects..."',
+    key: [
+      'Most common opinion issued (~95% of public company audits)',
+      'Auditor has no reservations about the financial statements as a whole',
+      'May still include an Emphasis of Matter or Other Matter paragraph without changing the opinion',
+      'Under PCAOB, may include Critical Audit Matters (CAMs) for large accelerated filers'
+    ]
+  },
+  em: {
+    title: 'Unmodified Opinion with Emphasis of Matter (EOM) Paragraph',
+    badge: 'badge-modified',
+    badgeText: 'EOM Paragraph',
+    when: 'Opinion remains unmodified, but auditor considers it necessary to draw users\' attention to a matter presented or disclosed in the financial statements that is of fundamental importance to their understanding. Examples include: going concern uncertainty (resolved), a major subsequent event, a change in accounting principle, significant related-party transactions, or material restatement of prior periods.',
+    language: '"Without qualifying our opinion, we draw attention to Note X in the financial statements, which indicates that..."',
+    key: [
+      'Opinion paragraph itself is NOT modified — the financial statements still "present fairly"',
+      'EOM paragraph appears after the opinion paragraph',
+      'Going concern uncertainty that has been adequately disclosed triggers an EOM, not a modified opinion',
+      'ISA 706 / AU-C 706 distinguish between Emphasis of Matter and Other Matter paragraphs'
+    ]
+  },
+  qualified: {
+    title: 'Qualified ("Except For") Opinion',
+    badge: 'badge-qualified',
+    badgeText: 'Qualified',
+    when: 'Used when (1) the auditor concludes there is a material but NOT pervasive misstatement in the financial statements, OR (2) the auditor is unable to obtain sufficient appropriate audit evidence for a specific area that is material but NOT pervasive. This is the "middle ground" modified opinion.',
+    language: '"In our opinion, except for the effects of the matter described in the Basis for Qualified Opinion section, the financial statements present fairly..."',
+    key: [
+      'The phrase "except for" is the key linguistic signal in the opinion paragraph',
+      'Pervasiveness is the critical distinction between a Qualified and Adverse/Disclaimer opinion',
+      'A misstatement is pervasive if it affects multiple elements, or is fundamental to users\' understanding',
+      'Auditor must include a "Basis for Qualified Opinion" paragraph explaining the issue',
+      'Quantification of the misstatement should be disclosed where practicable'
+    ]
+  },
+  adverse: {
+    title: 'Adverse Opinion',
+    badge: 'badge-adverse',
+    badgeText: 'Adverse',
+    when: 'Issued when the auditor has obtained sufficient evidence and concludes that misstatements are both material AND pervasive to the financial statements. The financial statements do NOT present fairly. This is the most severe opinion for material misstatements.',
+    language: '"In our opinion, because of the significance of the matter discussed in the Basis for Adverse Opinion section, the financial statements do not present fairly..."',
+    key: [
+      'Most severe negative opinion — rarely issued in practice',
+      'Triggers in SEC registrants can include stock exchange delisting, loan covenant defaults',
+      'Must include a "Basis for Adverse Opinion" paragraph with specific details',
+      'Pervasiveness means the effect is not confined to specific elements — it is widespread',
+      'Examples: systematic revenue recognition fraud, entity-wide going concern without adequate disclosure'
+    ]
+  },
+  disclaimer: {
+    title: 'Disclaimer of Opinion',
+    badge: 'badge-modified',
+    badgeText: 'Disclaimer',
+    when: 'Issued when the auditor is unable to obtain sufficient appropriate audit evidence on which to base an opinion, and the possible effects on the financial statements are both material AND pervasive. The auditor does not express an opinion. Common when client imposes severe scope limitations or circumstances prevent key audit procedures.',
+    language: '"Because of the significance of the matter described in the Basis for Disclaimer of Opinion section, we have not been able to obtain sufficient appropriate audit evidence to provide a basis for an audit opinion. Accordingly, we do not express an opinion on the financial statements."',
+    key: [
+      'Auditor literally cannot express an opinion — evidence is insufficient',
+      'Distinct from an adverse opinion: here the issue is lack of evidence, not confirmed misstatement',
+      'Often triggered by client-imposed scope limitations (auditor should consider withdrawing)',
+      'PCAOB AS 3101 and ISA 705 both require the auditor to state they do not express an opinion',
+      'Independence impairment can also require a disclaimer in certain circumstances'
+    ]
+  }
+};
+
+function selectOpinion(key) {
+  document.querySelectorAll('.opinion-card').forEach(c => c.classList.remove('selected'));
+  const cards = document.querySelectorAll('.opinion-card');
+  const keyMap = ['unmodified','em','qualified','adverse','disclaimer'];
+  cards[keyMap.indexOf(key)].classList.add('selected');
+  const d = opinionData[key];
+  const panel = document.getElementById('opinion-detail');
+  panel.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+      <span class="opinion-badge ${d.badge}">${d.badgeText}</span>
+      <span style="font-size:15px;font-weight:500;color:var(--color-text-primary);">${d.title}</span>
+    </div>
+    <p><strong>When it applies:</strong> ${d.when}</p>
+    <p style="margin-top:8px;"><strong>Report language example:</strong></p>
+    <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 12px;font-size:12px;color:var(--color-text-secondary);font-style:italic;margin-bottom:10px;line-height:1.7;">${d.language}</div>
+    <ul>${d.key.map(k=>`<li>${k}</li>`).join('')}</ul>
+  `;
+}
+
+// ─── DECISION TREE ───
+const treeNodes = {
+  start: {
+    q: 'Has the auditor obtained sufficient appropriate audit evidence?',
+    hint: 'Consider whether the scope of audit procedures has been adequately completed for all material areas.',
+    choices: [{ label: 'Yes', cls: 'yes', next: 'misstatement' }, { label: 'No', cls: 'no', next: 'scope_severity' }]
+  },
+  scope_severity: {
+    q: 'Is the inability to obtain evidence material AND pervasive?',
+    hint: 'Pervasive = effects are not confined to specific elements; fundamental to users\' understanding of the statements.',
+    choices: [{ label: 'Material and pervasive', cls: 'no', next: 'disclaimer' }, { label: 'Material, not pervasive', cls: 'yes', next: 'qualified_scope' }]
+  },
+  misstatement: {
+    q: 'Based on evidence, are the financial statements materially misstated?',
+    hint: 'Materiality is both quantitative and qualitative. Consider whether any misstatement, individually or in aggregate, could influence a reasonable user\'s decisions.',
+    choices: [{ label: 'No material misstatements', cls: 'yes', next: 'eom_check' }, { label: 'Material misstatements exist', cls: 'no', next: 'pervasive_check' }]
+  },
+  eom_check: {
+    q: 'Is there a matter of fundamental importance that users should be aware of?',
+    hint: 'Examples: going concern uncertainty adequately disclosed, significant change in accounting policy, major subsequent event, prior period restatement.',
+    choices: [{ label: 'Yes — draw attention to it', cls: 'yes', next: 'eom_opinion' }, { label: 'No — no special emphasis needed', cls: 'no', next: 'clean' }]
+  },
+  pervasive_check: {
+    q: 'Are the misstatements material AND pervasive?',
+    hint: 'Ask: Do the misstatements affect so many elements that a qualified opinion would be inadequate? Are they fundamental to a fair understanding of the statements?',
+    choices: [{ label: 'Material and pervasive', cls: 'no', next: 'adverse' }, { label: 'Material, not pervasive', cls: 'yes', next: 'qualified_misstate' }]
+  },
+  clean: { outcome: true, label: 'Unmodified (Clean) Opinion', color: '#27500A', bg: '#EAF3DE', desc: 'Issue an unmodified opinion. Financial statements present fairly in all material respects. No modifications to the opinion paragraph required.' },
+  eom_opinion: { outcome: true, label: 'Unmodified Opinion + EOM Paragraph', color: '#633806', bg: '#FAEEDA', desc: 'Issue an unmodified opinion but add an Emphasis of Matter paragraph after the opinion paragraph directing users to the relevant note or disclosure. The opinion itself is not modified.' },
+  qualified_scope: { outcome: true, label: 'Qualified ("Except For") Opinion — Scope Limitation', color: '#633806', bg: '#FAEEDA', desc: 'Issue a qualified "except for" opinion. Include a Basis for Qualified Opinion paragraph describing the scope limitation and its effects on the financial statements.' },
+  qualified_misstate: { outcome: true, label: 'Qualified ("Except For") Opinion — Misstatement', color: '#633806', bg: '#FAEEDA', desc: 'Issue a qualified "except for" opinion. Include a Basis for Qualified Opinion paragraph quantifying or describing the misstatement and its impact.' },
+  adverse: { outcome: true, label: 'Adverse Opinion', color: '#791F1F', bg: '#FCEBEB', desc: 'Issue an adverse opinion. The financial statements do NOT present fairly. Include a Basis for Adverse Opinion paragraph with specifics on the nature and financial impact of the pervasive misstatements.' },
+  disclaimer: { outcome: true, label: 'Disclaimer of Opinion', color: '#444441', bg: '#F1EFE8', desc: 'Issue a disclaimer of opinion. You are unable to express an opinion on the financial statements. Include a Basis for Disclaimer paragraph. Seriously consider whether to withdraw from the engagement if scope limitation is client-imposed.' }
+};
+
+let treePath = [];
+let currentNode = 'start';
+
+function startTree() {
+  treePath = [];
+  currentNode = 'start';
+  renderTreeNode();
+  document.getElementById('restart-btn').style.display = 'none';
+  document.getElementById('tree-path').style.display = 'none';
+}
+
+function renderTreeNode() {
+  const node = treeNodes[currentNode];
+  const wrap = document.getElementById('tree-node-wrap');
+  if (node.outcome) {
+    wrap.innerHTML = `
+      <div class="tree-node outcome" style="border-color:${node.color};background:${node.bg}30;">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:${node.color};font-weight:500;margin-bottom:6px;">Audit Opinion</div>
+        <div class="outcome-label" style="color:${node.color};">${node.label}</div>
+        <div class="outcome-desc">${node.desc}</div>
+      </div>`;
+    document.getElementById('restart-btn').style.display = 'block';
+  } else {
+    wrap.innerHTML = `
+      <div class="tree-node active">
+        <div class="tree-q">${node.q}</div>
+        <div class="tree-hint">${node.hint}</div>
+        <div class="tree-choices">
+          ${node.choices.map((c,i)=>`<button class="tree-choice ${c.cls}" onclick="treeChoose(${i})">${c.label}</button>`).join('')}
+        </div>
+      </div>`;
+  }
+  const pathWrap = document.getElementById('tree-path');
+  const crumbs = document.getElementById('path-crumbs');
+  if (treePath.length > 0) {
+    pathWrap.style.display = 'block';
+    crumbs.innerHTML = treePath.map(p => `<span class="path-crumb">${p}</span>`).join('');
+  }
+}
+
+function treeChoose(idx) {
+  const node = treeNodes[currentNode];
+  const choice = node.choices[idx];
+  treePath.push(choice.label);
+  currentNode = choice.next;
+  renderTreeNode();
+}
+
+// ─── CASE STUDIES ───
+const cases = [
+  {
+    co: 'Meridian Manufacturing Corp.', industry: 'Industrial / NYSE Listed',
+    teaser: 'A material amount of inventory in a remote overseas warehouse cannot be observed due to a government travel ban in effect at year-end.',
+    body: `<p><strong>Situation:</strong> Meridian's overseas inventory represents 18% of total assets ($240M). Due to a government-imposed travel ban, the auditor cannot physically observe or verify the year-end count. Alternative procedures (shipping records, cycle counts by management) provide some comfort but leave a significant gap.</p>
+    <p><strong>Your analysis:</strong> Is this a scope limitation or a misstatement? What is the potential magnitude? How would you assess pervasiveness? What type of opinion results?</p>`,
+    answer: `<strong>Answer: Qualified Opinion (Scope Limitation)</strong><p>This is a scope limitation — not a confirmed misstatement. At 18% of total assets, the inventory is material. However, the scope limitation affects a single balance sheet area (inventory), suggesting it is material but not pervasive. The auditor should issue a <strong>qualified ("except for") opinion</strong> with a Basis for Qualified Opinion paragraph disclosing the limitation, the affected balance, and that alternative procedures provided some but insufficient evidence. If Meridian is a public company, this must also be disclosed in an 8-K under SEC rules.</p>`
+  },
+  {
+    co: 'Vertex Financial Services LLC', industry: 'Fintech / Private',
+    teaser: 'Management used a revenue recognition policy that results in $45M of premature revenue — a material departure from ASC 606.',
+    body: `<p><strong>Situation:</strong> Vertex recognized $45M of subscription revenue upfront that should be recognized ratably over 24 months under ASC 606. The auditor has full access to all records and is certain of the misstatement. Net income is $52M reported vs. approximately $8M restated. Management refuses to correct the financial statements.</p>
+    <p><strong>Your analysis:</strong> Is this a scope limitation or misstatement? Given the magnitude (revenue, net income, equity are all affected), how do you assess pervasiveness? Does management refusal matter?</p>`,
+    answer: `<strong>Answer: Adverse Opinion</strong><p>This is a confirmed material misstatement (not a scope limitation — evidence is available). The misstatement is <strong>material and pervasive</strong>: it affects revenue, net income (~84% of reported earnings), and retained earnings — fundamental line items across the income statement and balance sheet. Management's refusal to correct eliminates the qualified option. The auditor must issue an <strong>adverse opinion</strong> stating the financial statements do not present fairly. The Basis for Adverse Opinion paragraph must quantify the misstatement and reference ASC 606.</p>`
+  },
+  {
+    co: 'Orion Biotech Therapeutics', industry: 'Life Sciences / Pre-Revenue',
+    teaser: 'Auditors have substantial doubt about Orion\'s ability to continue as a going concern. Management has disclosed this extensively in Note 1.',
+    body: `<p><strong>Situation:</strong> Orion has burned through 92% of its cash, has no approved products, and its bridge financing fell through. Management has prepared the financial statements on a going concern basis and included a detailed 900-word Note 1 disclosure about the uncertainty, including management's mitigating plans. The auditor agrees the uncertainty is substantial and that the disclosure is adequate.</p>
+    <p><strong>Your analysis:</strong> Is the going concern uncertainty a misstatement? Does adequate disclosure change the opinion type? What is the appropriate report structure?</p>`,
+    answer: `<strong>Answer: Unmodified Opinion with Emphasis of Matter (EOM) Paragraph</strong><p>Because management has <strong>adequately disclosed</strong> the going concern uncertainty in Note 1, the financial statements themselves are not misstated — there is no departure from GAAP. Under AU-C 570 / ISA 570, when going concern uncertainty is adequately disclosed, the auditor issues an <strong>unmodified opinion</strong> but must add an <strong>Emphasis of Matter paragraph</strong> after the opinion directing users to Note 1. The EOM does not alter the opinion. If management had not disclosed the uncertainty, a qualified or adverse opinion would be required.</p>`
+  },
+  {
+    co: 'Cascade Retail Holdings', industry: 'Consumer / Mid-Market',
+    teaser: 'Management refused all access to related-party transaction documentation involving the CEO\'s family trust — a material area.',
+    body: `<p><strong>Situation:</strong> Cascade entered into $87M of transactions with entities controlled by the CEO's family trust. Management asserts these are arm's-length and provided only summary-level information. The auditor demanded full documentation; management refused entirely. The $87M represents 31% of total revenues.</p>
+    <p><strong>Your analysis:</strong> Is this a scope limitation or misstatement (or potentially both)? At 31% of revenues, how pervasive is this? What unique professional responsibilities arise when a client imposes scope limitations?</p>`,
+    answer: `<strong>Answer: Disclaimer of Opinion (and consider engagement withdrawal)</strong><p>This is a <strong>client-imposed scope limitation</strong> on a material and pervasive area. At 31% of revenues, the transactions affect core operating performance — the possible effects are not confined to a single balance. The auditor cannot obtain sufficient appropriate evidence, and the pervasiveness warrants a <strong>disclaimer of opinion</strong>. Critically, AU-C 705 / ISA 705 indicate that when scope limitations are imposed by management (rather than circumstantial), the auditor should seriously consider <strong>withdrawing from the engagement</strong>, especially if other indicators of management integrity issues exist. A disclaimer without withdrawal may still be required if withdrawal is not feasible.</p>`
+  }
+];
+
+function buildCases() {
+  const list = document.getElementById('case-list');
+  list.innerHTML = cases.map((c, i) => `
+    <div class="case-item" id="case-${i}" onclick="toggleCase(${i})">
+      <div class="case-header">
+        <div>
+          <div class="case-co">${c.co}</div>
+          <div class="case-industry">${c.industry}</div>
+        </div>
+        <div style="font-size:11px;color:var(--color-text-tertiary);white-space:nowrap;">Case ${i+1}</div>
+      </div>
+      <div class="case-teaser">${c.teaser}</div>
+      <div class="case-body">
+        ${c.body}
+        <div class="answer-reveal">
+          <button class="reveal-btn" onclick="event.stopPropagation();revealAnswer(${i})">Reveal analysis</button>
+          <div class="reveal-answer" id="answer-${i}"><p>${c.answer}</p></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleCase(i) {
+  const el = document.getElementById(`case-${i}`);
+  el.classList.toggle('open');
+}
+
+function revealAnswer(i) {
+  document.getElementById(`answer-${i}`).classList.toggle('shown');
+}
+
+// ─── QUIZ ───
+const questions = [
+  {
+    q: 'An auditor discovers that a client has capitalized $8.2M of expenses that should have been expensed under GAAP. The amount is material but not pervasive. Management refuses to correct. What opinion is appropriate?',
+    opts: ['Unmodified opinion with EOM paragraph', 'Qualified ("except for") opinion', 'Adverse opinion', 'Disclaimer of opinion'],
+    correct: 1,
+    feedback: 'Correct. Because the misstatement is material but NOT pervasive, a qualified "except for" opinion is appropriate. If management had corrected the error, an unmodified opinion would be issued. A disclaimer applies to scope limitations, not confirmed misstatements.'
+  },
+  {
+    q: 'An auditor is working with a new client who inherited books with significant gaps from a predecessor. The auditor cannot obtain evidence on opening balances — which represent material and pervasive amounts. Which opinion results?',
+    opts: ['Qualified opinion — misstatement', 'Adverse opinion', 'Disclaimer of opinion', 'Unmodified opinion with EOM'],
+    correct: 2,
+    feedback: 'Correct. This is a scope limitation (lack of evidence) that is material and pervasive. A disclaimer of opinion is required. If the scope limitation were material but not pervasive, a qualified opinion would apply. An adverse opinion applies to confirmed misstatements, not evidence limitations.'
+  },
+  {
+    q: 'Under ISA 705, which phrase is the definitive signal that a qualified opinion has been issued?',
+    opts: ['"In our view, except as noted..."', '"Subject to the foregoing..."', '"Except for the effects of the matter(s) described in the Basis for Qualified Opinion..."', '"We draw attention to Note X..."'],
+    correct: 2,
+    feedback: 'Correct. ISA 705 and AU-C 705 both require the phrase "except for the effects of the matter(s) described in the Basis for Qualified Opinion section" in a qualified opinion. "We draw attention" is EOM language. "Subject to" is an outdated pre-1988 formulation no longer considered acceptable under modern standards.'
+  },
+  {
+    q: 'TechGrow Inc. has substantial doubt about its ability to continue as a going concern. Management has prepared and disclosed this uncertainty in detail in Note 2. What opinion type is most appropriate under AU-C 570?',
+    opts: ['Adverse opinion — going concern is always an adverse', 'Qualified opinion — material uncertainty exists', 'Unmodified opinion with Emphasis of Matter paragraph', 'Disclaimer of opinion — no certainty about future'],
+    correct: 2,
+    feedback: 'Correct. When management adequately discloses the going concern uncertainty in the financial statements, AU-C 570 requires an unmodified opinion with an Emphasis of Matter paragraph — not a qualified or adverse opinion. The departure only exists if management fails to disclose, prepare on a going concern basis inappropriately, or misstates the facts.'
+  },
+  {
+    q: 'A public company auditor is issuing a report under PCAOB standards. Which of the following must be included in the report for a large accelerated filer, even when an unmodified opinion is issued?',
+    opts: ['An emphasis of matter paragraph', 'Critical Audit Matters (CAMs)', 'A basis for opinion on internal controls', 'Going concern disclosure'],
+    correct: 1,
+    feedback: 'Correct. PCAOB AS 3101 requires auditors of large accelerated filers to communicate Critical Audit Matters (CAMs) — those that involved especially challenging, subjective, or complex auditor judgment — in the audit report. This requirement applies even when an unmodified opinion is issued. EOM paragraphs are situational, not mandatory.'
+  },
+  {
+    q: 'The distinction between a Qualified and an Adverse opinion for a material misstatement hinges on:',
+    opts: ['The dollar magnitude of the misstatement', 'Whether management refuses to correct it', 'Whether the misstatement is pervasive to the financial statements', 'Whether the auditor has sufficient evidence'],
+    correct: 2,
+    feedback: 'Correct. Pervasiveness is the critical distinction. A misstatement is pervasive when it affects many elements of the financial statements, or represents a substantial proportion of the statements, or is fundamental to users\' understanding. Magnitude is a factor, but pervasiveness is the formal criterion in ISA 705 and AU-C 705.'
+  },
+  {
+    q: 'An auditor issues an unmodified opinion with an Other Matter paragraph describing why the prior year comparative statements were not audited by the current firm. Under ISA 706, this is best described as:',
+    opts: ['An Emphasis of Matter paragraph', 'A modification to the opinion', 'An Other Matter paragraph — relates to matters outside the current financial statements', 'A Basis for Qualified Opinion paragraph'],
+    correct: 2,
+    feedback: 'Correct. ISA 706 distinguishes between Emphasis of Matter (draws attention to something presented in the financial statements) and Other Matter paragraphs (draws attention to matters other than those presented in the financial statements). Information about a predecessor auditor or scope of the engagement goes in an Other Matter paragraph.'
+  }
+];
+
+let currentQ = 0;
+let answers = [];
+let quizComplete = false;
+
+function buildQuiz() {
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const inner = document.getElementById('quiz-inner');
+  if (quizComplete) {
+    const score = answers.filter(a => a === true).length;
+    const pct = Math.round(score / questions.length * 100);
+    let grade, msg;
+    if (pct >= 90) { grade = 'A — Outstanding'; msg = 'Excellent command of audit reporting standards. You demonstrate the analytical depth expected of a practicing auditor.'; }
+    else if (pct >= 80) { grade = 'B — Proficient'; msg = 'Solid understanding of the material. Review the pervasiveness concept and EOM vs. qualified distinctions to sharpen your edge.'; }
+    else if (pct >= 70) { grade = 'C — Developing'; msg = 'Core concepts are forming. Focus on the decision tree logic distinguishing scope limitations from misstatements, and qualified from adverse opinions.'; }
+    else { grade = 'Below Expectations'; msg = 'Return to the Overview and Decision Framework tabs. The ISA 705 framework for modifications is the foundation — revisit that before retrying.'; }
+    inner.innerHTML = `
+      <div class="quiz-score">
+        <div class="score-num">${score}/${questions.length}</div>
+        <div class="score-label">Questions answered correctly</div>
+        <div class="score-grade">${grade}</div>
+        <div class="score-msg">${msg}</div>
+        <button class="retry-btn" onclick="restartQuiz()">Retake assessment</button>
+      </div>`;
+    return;
+  }
+  const q = questions[currentQ];
+  const answered = answers[currentQ] !== undefined;
+  inner.innerHTML = `
+    <div class="quiz-progress">${questions.map((_,i)=>`<div class="progress-dot ${i < currentQ ? 'done' : i === currentQ ? 'current' : ''}"></div>`).join('')}</div>
+    <div class="quiz-q">${q.q}</div>
+    <div style="height:12px;"></div>
+    <div class="quiz-options">
+      ${q.opts.map((o,i) => {
+        let cls = '';
+        if (answered) {
+          if (i === q.correct) cls = 'correct';
+          else if (answers[currentQ] === false && i === currentQ) cls = 'incorrect';
+        }
+        return `<button class="quiz-opt ${cls}" onclick="answerQ(${i})" ${answered ? 'disabled' : ''}>${o}</button>`;
+      }).join('')}
+    </div>
+    <div class="quiz-feedback ${answered ? 'show ' + (answers[currentQ] === true ? 'correct' : 'incorrect') : ''}" id="quiz-feedback">
+      ${answered ? (answers[currentQ] === true ? '✓ ' : '✗ ') + q.feedback : ''}
+    </div>
+    <div class="quiz-nav">
+      <button class="quiz-nav-btn" onclick="prevQ()" ${currentQ === 0 ? 'disabled' : ''}>← Back</button>
+      <button class="quiz-nav-btn" onclick="nextQ()" ${!answered ? 'disabled' : ''}>
+        ${currentQ === questions.length - 1 ? 'See results' : 'Next →'}
+      </button>
+      <span class="quiz-count">${currentQ + 1} of ${questions.length}</span>
+    </div>`;
+}
+
+function answerQ(idx) {
+  if (answers[currentQ] !== undefined) return;
+  const q = questions[currentQ];
+  const correct = idx === q.correct;
+  answers[currentQ] = correct;
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts.forEach((o, i) => {
+    o.disabled = true;
+    if (i === q.correct) o.classList.add('correct');
+    else if (i === idx && !correct) o.classList.add('incorrect');
+  });
+  const fb = document.getElementById('quiz-feedback');
+  fb.textContent = (correct ? '✓ ' : '✗ ') + q.feedback;
+  fb.classList.add('show', correct ? 'correct' : 'incorrect');
+  document.querySelector('.quiz-nav-btn:last-of-type').disabled = false;
+}
+
+function nextQ() {
+  if (currentQ < questions.length - 1) { currentQ++; renderQuestion(); }
+  else { quizComplete = true; renderQuestion(); }
+}
+
+function prevQ() {
+  if (currentQ > 0) { currentQ--; renderQuestion(); }
+}
+
+function restartQuiz() {
+  currentQ = 0; answers = []; quizComplete = false;
+  renderQuestion();
+}
+
+// ─── TABS ───
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─── INIT ───
+startTree();
+buildCases();
+buildQuiz();
+</script>
