@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AC 606 Exam 1 Study Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1B3A6B;
+    --navy-light: #2a5298;
+    --gold: #C9A84C;
+    --gold-light: #F0D98A;
+    --cream: #FAFAF7;
+    --light-blue: #E8F0FA;
+    --text: #1a1a2e;
+    --muted: #5a6a8a;
+    --green: #1E6B3C;
+    --green-light: #D4EDDA;
+    --red: #8B1A1A;
+    --red-light: #FDDEDE;
+    --border: #DDE4EF;
+  }
+
+  body { font-family: 'Source Sans 3', Georgia, sans-serif; background: var(--cream); color: var(--text); line-height: 1.6; padding: 0; margin: 0; }
+
+  .hero { background: var(--navy); padding: 40px 36px 32px; border-radius: 8px; margin-bottom: 32px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 180px; height: 180px; border-radius: 50%; background: rgba(201,168,76,0.12); }
+  .hero-label { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold-light); font-weight: 600; margin-bottom: 10px; font-family: 'Source Sans 3', sans-serif; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: 28px; color: #fff; line-height: 1.2; margin-bottom: 14px; }
+  .hero p { font-size: 14.5px; color: #C8D8EA; max-width: 740px; line-height: 1.7; }
+  .hero-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .badge { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22); color: #fff; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; font-family: 'Source Sans 3', sans-serif; }
+
+  .chapter-map { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 32px; }
+  .chapter-card { background: #fff; border: 1px solid var(--border); border-top: 4px solid var(--navy); border-radius: 6px; padding: 14px 14px 12px; }
+  .chapter-card .ch-num { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; font-family: 'Source Sans 3', sans-serif; }
+  .chapter-card .ch-title { font-family: 'Playfair Display', serif; font-size: 13px; color: var(--navy); line-height: 1.3; margin-bottom: 8px; }
+  .chapter-card .ch-topics { font-size: 11.5px; color: var(--muted); line-height: 1.6; }
+
+  .essay-alert { background: linear-gradient(135deg, #FFF8E8, #FFF3CD); border: 2px solid var(--gold); border-radius: 8px; padding: 22px 26px; margin-bottom: 32px; }
+  .essay-alert-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .essay-icon { width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .essay-alert-header h2 { font-family: 'Playfair Display', serif; font-size: 18px; color: #7A5C00; }
+  .essay-alert p { font-size: 14px; color: #5a4000; line-height: 1.6; }
+  .essay-topics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .essay-topic { background: rgba(255,255,255,0.7); border: 1px solid rgba(201,168,76,0.4); border-radius: 6px; padding: 10px 14px; font-size: 13px; color: #5a4000; font-weight: 600; }
+  .essay-topic span { display: block; font-weight: 400; font-size: 12px; margin-top: 3px; color: #7a6020; }
+
+  .section-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 4px; font-family: 'Source Sans 3', sans-serif; }
+  .section-rule { width: 40px; height: 3px; background: var(--navy); border-radius: 2px; margin-bottom: 20px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--navy); margin-bottom: 16px; }
+
+  .tab-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .tab-btn { padding: 6px 16px; border-radius: 20px; border: 1.5px solid var(--border); background: #fff; color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Source Sans 3', sans-serif; transition: all 0.18s; }
+  .tab-btn.active, .tab-btn:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+  .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-bottom: 36px; }
+  .flashcard { perspective: 1000px; height: 175px; cursor: pointer; }
+  .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform 0.55s cubic-bezier(.4,0,.2,1); transform-style: preserve-3d; }
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+  .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; border-radius: 8px; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 16px; text-align: center; }
+  .flashcard-front { background: var(--navy); border: 1px solid var(--navy-light); }
+  .flashcard-front .card-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; font-family: 'Source Sans 3', sans-serif; }
+  .flashcard-front .card-term { font-family: 'Playfair Display', serif; font-size: 16px; color: #fff; line-height: 1.3; }
+  .flashcard-front .card-hint { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 10px; font-style: italic; }
+  .flashcard-back { background: var(--light-blue); border: 2px solid var(--navy); transform: rotateY(180deg); }
+  .flashcard-back .card-def { font-size: 13px; color: var(--text); line-height: 1.55; }
+
+  .quiz-q { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 20px 22px; margin-bottom: 14px; }
+  .quiz-q-num { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .quiz-q-text { font-size: 14.5px; font-weight: 600; color: var(--text); margin-bottom: 14px; line-height: 1.5; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 13.5px; transition: all 0.18s ease; background: var(--cream); color: var(--text); line-height: 1.45; }
+  .option:hover { border-color: var(--navy); background: var(--light-blue); }
+  .option.correct { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 600; }
+  .option.incorrect { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .option.revealed-correct { border-color: var(--green); background: var(--green-light); color: var(--green); opacity: 0.65; pointer-events: none; }
+  .option-letter { font-weight: 700; font-size: 12px; min-width: 20px; text-align: center; margin-top: 1px; }
+  .feedback { margin-top: 12px; padding: 10px 14px; border-radius: 6px; font-size: 13px; line-height: 1.5; display: none; }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: var(--green-light); color: var(--green); border-left: 4px solid var(--green); }
+  .feedback.incorrect-fb { background: var(--red-light); color: var(--red); border-left: 4px solid var(--red); }
+
+  .matching-col-header { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: var(--muted); padding: 0 0 6px 4px; border-bottom: 2px solid var(--border); margin-bottom: 8px; }
+  .match-item { background: var(--navy); color: #fff; border-radius: 6px; padding: 10px 14px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.18s; border: 2px solid transparent; font-family: 'Source Sans 3', sans-serif; margin-bottom: 8px; }
+  .match-item:hover { background: var(--navy-light); }
+  .match-item.selected { border-color: var(--gold); background: var(--navy-light); }
+  .match-item.matched-correct { background: var(--green); border-color: var(--green); cursor: default; }
+  .match-item.matched-wrong { background: var(--red); border-color: var(--red); }
+  .match-def { background: var(--light-blue); border: 1.5px solid var(--border); border-radius: 6px; padding: 10px 14px; font-size: 13px; color: var(--text); cursor: pointer; transition: all 0.18s; line-height: 1.45; margin-bottom: 8px; }
+  .match-def:hover { border-color: var(--navy); background: #dce8f8; }
+  .match-def.selected { border-color: var(--gold); background: #FFF8E8; }
+  .match-def.matched-correct { border-color: var(--green); background: var(--green-light); cursor: default; color: var(--green); font-weight: 600; }
+  .match-def.matched-wrong { border-color: var(--red); background: var(--red-light); }
+  .match-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--navy); color: #fff; border: none; border-radius: 6px; padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Source Sans 3', sans-serif; transition: background 0.18s; margin-top: 8px; }
+  .match-btn:hover { background: var(--navy-light); }
+  .reset-btn { background: transparent; border: 1.5px solid var(--border); color: var(--muted); border-radius: 6px; padding: 9px 18px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: 10px; font-family: 'Source Sans 3', sans-serif; transition: all 0.18s; }
+  .reset-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .match-score { display: inline-block; margin-left: 14px; font-size: 13px; color: var(--muted); font-weight: 600; }
+
+  .essay-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 14px; }
+  .essay-card-header { background: var(--navy); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+  .essay-card-header h3 { font-family: 'Playfair Display', serif; font-size: 16px; color: #fff; }
+  .essay-card-header .toggle { color: var(--gold-light); font-size: 20px; font-weight: 700; transition: transform 0.25s; flex-shrink: 0; margin-left: 12px; }
+  .essay-card-header.open .toggle { transform: rotate(45deg); }
+  .essay-card-body { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.45s ease, padding 0.3s; }
+  .essay-card-body.open { max-height: 1200px; padding: 18px 20px 22px; }
+  .essay-card-body p { font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 10px; }
+  .essay-card-body ul { list-style: none; padding: 0; }
+  .essay-card-body ul li { font-size: 13.5px; color: var(--text); padding: 6px 0 6px 20px; border-bottom: 1px solid var(--border); position: relative; line-height: 1.5; }
+  .essay-card-body ul li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+  .essay-card-body ul li:last-child { border-bottom: none; }
+  .essay-tip { margin-top: 14px; background: #FFF8E8; border-left: 4px solid var(--gold); padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 13px; color: #5a4000; font-style: italic; line-height: 1.6; }
+
+  .step-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; line-height: 1.55; }
+  .step-row:last-child { border-bottom: none; }
+  .step-badge { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; min-width: 26px; background: var(--navy); color: #fff; border-radius: 50%; font-size: 12px; font-weight: 700; font-family: 'Source Sans 3', sans-serif; }
+  .step-row.highlight-step { background: #FFF8E8; border-radius: 6px; padding: 12px 12px; border: 2px solid var(--gold); margin-top: 8px; }
+  .step-row.highlight-step .step-badge { background: var(--gold); color: var(--navy); }
+
+  .divider { border-top: 2px solid var(--border); margin: 36px 0; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">AC 606 &mdash; Auditing &nbsp;|&nbsp; Exam 1 Preparation</div>
+  <h1>Exam 1 Study Guide</h1>
+  <p>This interactive study guide covers all material from Modules 1&ndash;3, Chapters 1 through 5. Filter flashcards by chapter, test yourself with the knowledge check, complete both matching exercises, and study all four possible essay topics.</p>
+  <div class="hero-badges">
+    <span class="badge">Ch. 1 &mdash; Intro to Auditing</span>
+    <span class="badge">Ch. 2 &mdash; Audit Environment</span>
+    <span class="badge">Ch. 3 &mdash; Audit Planning</span>
+    <span class="badge">Ch. 4 &mdash; Risk Assessment</span>
+    <span class="badge">Ch. 5 &mdash; Evidence &amp; Documentation</span>
+  </div>
+</div>
+
+<!-- CHAPTER MAP -->
+<div class="chapter-map">
+  <div class="chapter-card">
+    <div class="ch-num">Chapter 1</div>
+    <div class="ch-title">Intro to Assurance &amp; Financial Statement Auditing</div>
+    <div class="ch-topics">Audit vs. attest vs. assurance &bull; Audit risk &bull; Materiality &bull; Reasonable assurance &bull; Management assertions</div>
+  </div>
+  <div class="chapter-card">
+    <div class="ch-num">Chapter 2</div>
+    <div class="ch-title">The Financial Statement Auditing Environment</div>
+    <div class="ch-topics">PCAOB &bull; AICPA &bull; SOX &bull; Independence &bull; Professional skepticism &bull; Governance &bull; Audit committee</div>
+  </div>
+  <div class="chapter-card">
+    <div class="ch-num">Chapter 3</div>
+    <div class="ch-title">Audit Planning, Types of Audit Tests &amp; Materiality</div>
+    <div class="ch-topics">Client acceptance &bull; Engagement letter &bull; Audit strategy &bull; Tests of controls &bull; Substantive tests &bull; Dual-purpose tests &bull; Materiality</div>
+  </div>
+  <div class="chapter-card">
+    <div class="ch-num">Chapter 4</div>
+    <div class="ch-title">Risk Assessment</div>
+    <div class="ch-topics">Audit risk model &bull; Inherent risk &bull; Control risk &bull; Detection risk &bull; Fraud triangle &bull; Analytical procedures &bull; Fraud risk</div>
+  </div>
+  <div class="chapter-card">
+    <div class="ch-num">Chapter 5</div>
+    <div class="ch-title">Evidence &amp; Documentation</div>
+    <div class="ch-topics">Sufficiency &bull; Appropriateness &bull; Evidence reliability &bull; Vouching vs. tracing &bull; Audit procedures &bull; Working papers &bull; Current vs. permanent files</div>
+  </div>
+</div>
+
+<!-- ESSAY ALERT -->
+<div class="essay-alert">
+  <div class="essay-alert-header">
+    <div class="essay-icon">&#9998;</div>
+    <h2>Essay Question &mdash; Know These Four Topics</h2>
+  </div>
+  <p>The exam includes <strong>one essay question</strong> drawn from one of the four topics below. You will not know which one in advance &mdash; be prepared to write about any of them. Expand Section 5 for detailed study notes on each topic.</p>
+  <div class="essay-topics">
+    <div class="essay-topic">AICPA Conceptual Framework <span>Steps (including documentation), threats &amp; scenario application</span></div>
+    <div class="essay-topic">Professional Skepticism <span>What it is, why it matters &amp; how it is applied</span></div>
+    <div class="essay-topic">Materiality <span>Concept, qualitative vs. quantitative &amp; importance to an audit</span></div>
+    <div class="essay-topic">Phases of the Audit <span>Identify &amp; describe all phases</span></div>
+  </div>
+</div>
+
+<!-- ── SECTION 1: FLASHCARDS ── -->
+<div class="section-label">Section 1</div>
+<div class="section-rule"></div>
+<div class="section-title">Key Concepts &mdash; Flashcards</div>
+<p style="font-size:13.5px; color:var(--muted); margin-bottom:16px;">Filter by chapter, then click any card to flip between term and definition. Click again to flip back.</p>
+
+<div class="tab-row">
+  <button class="tab-btn active" onclick="filterCards('all', this)">All</button>
+  <button class="tab-btn" onclick="filterCards('ch1', this)">Ch. 1</button>
+  <button class="tab-btn" onclick="filterCards('ch2', this)">Ch. 2</button>
+  <button class="tab-btn" onclick="filterCards('ch3', this)">Ch. 3</button>
+  <button class="tab-btn" onclick="filterCards('ch4', this)">Ch. 4</button>
+  <button class="tab-btn" onclick="filterCards('ch5', this)">Ch. 5</button>
+</div>
+
+<div class="flashcard-grid" id="card-grid">
+
+  <!-- CH 1 -->
+  <div class="flashcard" data-cat="ch1" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 1 &mdash; Services</div><div class="card-term">Auditing vs. Attestation vs. Assurance</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def"><strong>Assurance</strong> is the broadest category. <strong>Attestation</strong> is a subset &mdash; the practitioner issues a written conclusion on a written assertion. <strong>Auditing</strong> is the most specific: a type of attestation focused on financial statements.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch1" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 1 &mdash; Audit Risk</div><div class="card-term">Audit Risk</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">The risk that an auditor issues an <strong>inappropriate opinion</strong> on financial statements that are materially misstated. AR = IR &times; CR &times; DR. Auditors reduce audit risk to an <em>acceptably low</em> level &mdash; not zero.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch1" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 1 &mdash; Materiality</div><div class="card-term">Materiality</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">A misstatement is material if it would <strong>change or influence the judgment</strong> of a reasonable user. Involves both <strong>quantitative</strong> (dollar amount) and <strong>qualitative</strong> (nature of the item) factors. Largely a matter of professional judgment.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch1" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 1 &mdash; Assertions</div><div class="card-term">Management Assertions</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">Implicit or explicit claims management makes in the financial statements. Categories: <strong>existence, completeness, rights &amp; obligations, accuracy, cut-off, classification, presentation.</strong> Auditors design procedures to test each relevant assertion.</div></div>
+    </div>
+  </div>
+
+  <!-- CH 2 -->
+  <div class="flashcard" data-cat="ch2" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 2 &mdash; Regulation</div><div class="card-term">PCAOB vs. AICPA / ASB</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def"><strong>PCAOB</strong>: sets auditing standards for <em>public company</em> audits (created by SOX 2002). <strong>AICPA / ASB</strong>: sets auditing standards for <em>private company</em> audits via Statements on Auditing Standards (SAS). Both issue professional guidance auditors must follow.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch2" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 2 &mdash; Independence</div><div class="card-term">Independence in Fact vs. Appearance</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def"><strong>In fact</strong>: the auditor actually maintains an unbiased mental attitude. <strong>In appearance</strong>: a reasonable, informed third party would conclude the auditor is independent. <em>Both are required &mdash; always. There are no exceptions.</em></div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch2" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 2 &mdash; Governance</div><div class="card-term">Corporate Governance &amp; the Audit Committee</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">The <strong>board of directors</strong> oversees management on behalf of shareholders. The <strong>audit committee</strong> (independent directors) oversees financial reporting and the external audit. Under SOX, the audit committee &mdash; not management &mdash; hires and oversees the external auditor.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch2" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 2 &mdash; Standards</div><div class="card-term">Professional Guidance &amp; Due Care</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">Auditors follow a hierarchy of professional guidance: <strong>PCAOB standards</strong> (public) or <strong>GAAS / SAS</strong> (private), plus the <strong>AICPA Code of Professional Conduct</strong> for ethics. <strong>Due professional care</strong> requires exercising professional skepticism throughout the entire audit.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch2" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 2 &mdash; Responsibility</div><div class="card-term">Management vs. Auditor Responsibility</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def"><strong>Management</strong> bears ultimate responsibility for the financial statements. <strong>The auditor</strong> is responsible for expressing an opinion on whether those statements are fairly presented. The auditor provides <em>reasonable &mdash; not absolute &mdash; assurance.</em></div></div>
+    </div>
+  </div>
+
+  <!-- CH 3 -->
+  <div class="flashcard" data-cat="ch3" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 3 &mdash; Planning</div><div class="card-term">Engagement Letter</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">A formal written agreement documenting the <strong>terms of the engagement</strong> before work begins. Includes: scope, responsibilities of each party, fee arrangements, form of the report, and limitations. Establishes mutual understanding between auditor and client.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch3" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 3 &mdash; Planning</div><div class="card-term">Client Acceptance &amp; Continuance</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">Before accepting or continuing with a client, the auditor evaluates <strong>management integrity, auditor competence, independence, and engagement risk.</strong> If a prospective client refuses predecessor-auditor communication, the successor should have serious reservations about accepting.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch3" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 3 &mdash; Tests</div><div class="card-term">Substantive Testing</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">Audit procedures designed to <strong>detect material misstatements</strong> directly at the assertion level. Two types: <strong>(1) Tests of details</strong> &mdash; examine individual transactions or balances. <strong>(2) Substantive analytical procedures</strong> &mdash; compare recorded amounts to expectations developed from other data.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch3" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 3 &mdash; Tests</div><div class="card-term">Dual-Purpose Test</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">A single procedure that simultaneously serves as <strong>both a test of controls AND a substantive test of transactions.</strong> Example: inspecting an invoice for proper authorization (control) AND verifying the dollar amount matches the journal entry (substantive). Efficient use of audit resources.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch3" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 3 &mdash; Materiality</div><div class="card-term">Performance Materiality</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">Also called <strong>tolerable misstatement.</strong> Set <em>lower</em> than overall planning materiality at the account or assertion level. Purpose: reduce the risk that the aggregate of individually immaterial uncorrected misstatements exceeds overall planning materiality.</div></div>
+    </div>
+  </div>
+
+  <!-- CH 4 -->
+  <div class="flashcard" data-cat="ch4" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 4 &mdash; Risk Model</div><div class="card-term">Inherent Risk</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">The susceptibility of an assertion to material misstatement <strong>assuming no related controls exist.</strong> Driven by the complexity or nature of the account, industry, or transaction. The auditor assesses inherent risk but cannot change it.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch4" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 4 &mdash; Risk Model</div><div class="card-term">Detection Risk</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">The risk that audit procedures <strong>will not detect</strong> a material misstatement that exists. The <em>only component the auditor directly controls</em> &mdash; by adjusting the nature, timing, and extent of substantive procedures. Varies inversely with inherent and control risk.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch4" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 4 &mdash; Fraud</div><div class="card-term">The Fraud Triangle</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">Three conditions typically present when fraud occurs: <strong>Incentive/Pressure</strong> (motivation), <strong>Opportunity</strong> (weak controls or oversight), and <strong>Rationalization</strong> (ability to justify the act). All three often coexist in fraud scenarios.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch4" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 4 &mdash; Risk</div><div class="card-term">Engagement Risk</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">The risk to the auditor from association with a client &mdash; reputational, legal, or financial. Unlike audit risk, engagement risk <strong>cannot be eliminated.</strong> It can only be managed through careful client acceptance and continuance policies.</div></div>
+    </div>
+  </div>
+
+  <!-- CH 5 -->
+  <div class="flashcard" data-cat="ch5" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 5 &mdash; Evidence</div><div class="card-term">Sufficiency vs. Appropriateness</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def"><strong>Sufficiency</strong> = the <em>quantity</em> of evidence (enough to support the conclusion). <strong>Appropriateness</strong> = the <em>quality</em> (relevance + reliability). The auditor must satisfy both dimensions. More evidence is not always better if it lacks quality.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch5" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 5 &mdash; Evidence</div><div class="card-term">Audit Evidence Reliability</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">Evidence is more reliable when: from <strong>independent external sources</strong>; obtained <strong>directly by the auditor</strong>; in <strong>documentary form</strong>; from an entity with <strong>effective controls.</strong> Inquiry (oral) alone is the <em>least reliable</em> form of evidence.</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch5" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 5 &mdash; Evidence</div><div class="card-term">Vouching vs. Tracing</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def"><strong>Vouching</strong>: recorded entry &rarr; source document. Tests <em>occurrence/existence</em> (did it actually happen?). <strong>Tracing</strong>: source document &rarr; recorded entry. Tests <em>completeness</em> (was everything recorded?). <em>Direction matters.</em></div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch5" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 5 &mdash; Documentation</div><div class="card-term">Current File vs. Permanent File</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def"><strong>Current file</strong>: current-year specific items (lead schedules, adjusting entries, current-year audit report, confirmations). <strong>Permanent file</strong>: information relevant across multiple years (chart of accounts, articles of incorporation, debt agreements, prior audited financials).</div></div>
+    </div>
+  </div>
+
+  <div class="flashcard" data-cat="ch5" onclick="this.classList.toggle('flipped')">
+    <div class="flashcard-inner">
+      <div class="flashcard-front"><div class="card-label">Ch. 5 &mdash; Documentation</div><div class="card-term">Purpose of Working Papers</div><div class="card-hint">Click to reveal</div></div>
+      <div class="flashcard-back"><div class="card-def">Working papers <strong>support the audit opinion,</strong> document that standards were followed, facilitate <strong>review and supervision</strong> of audit staff, and provide a basis for future audits. They are the property of the <strong>auditor</strong> &mdash; not the client, shareholders, or SEC.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<!-- ── SECTION 2: KNOWLEDGE CHECK ── -->
+<div class="section-label">Section 2</div>
+<div class="section-rule"></div>
+<div class="section-title">Knowledge Check &mdash; Practice Questions</div>
+<p style="font-size:13.5px; color:var(--muted); margin-bottom:20px;">Different wording and scenarios from the exam &mdash; same concepts. Select an answer to get instant feedback.</p>
+
+  <div class="quiz-q">
+    <div class="quiz-q-num">Question 1 &nbsp;&bull;&nbsp; Ch. 1 &mdash; Services</div>
+    <div class="quiz-q-text">Which of the following correctly describes the relationship between auditing, attestation, and assurance?</div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(this, false, 'q1')"><span class="option-letter">A</span>Auditing and attestation are the same thing; assurance is a broader term for both.</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q1')"><span class="option-letter">B</span>Assurance and attestation are identical; auditing is a separate, unrelated service.</div>
+      <div class="option" onclick="checkAnswer(this, true, 'q1')"><span class="option-letter">C</span>Assurance is the broadest category; attestation is a subset of assurance; auditing is a specific type of attestation.</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q1')"><span class="option-letter">D</span>Auditing is broader than attestation, which is broader than assurance.</div>
+    </div>
+    <div class="feedback" id="q1-fb"></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="quiz-q-num">Question 2 &nbsp;&bull;&nbsp; Ch. 2 &mdash; Governance</div>
+    <div class="quiz-q-text">Under SOX, which body is responsible for hiring and overseeing the external auditor of a publicly traded company?</div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(this, false, 'q2')"><span class="option-letter">A</span>The Chief Financial Officer</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q2')"><span class="option-letter">B</span>The full Board of Directors</div>
+      <div class="option" onclick="checkAnswer(this, true, 'q2')"><span class="option-letter">C</span>The Audit Committee</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q2')"><span class="option-letter">D</span>The PCAOB</div>
+    </div>
+    <div class="feedback" id="q2-fb"></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="quiz-q-num">Question 3 &nbsp;&bull;&nbsp; Ch. 3 &mdash; Planning</div>
+    <div class="quiz-q-text">What is the primary purpose of an engagement letter?</div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(this, false, 'q3')"><span class="option-letter">A</span>To document all audit findings and communicate the final audit opinion.</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q3')"><span class="option-letter">B</span>To confirm management's representations about the financial statements at year end.</div>
+      <div class="option" onclick="checkAnswer(this, true, 'q3')"><span class="option-letter">C</span>To establish a mutual understanding between the auditor and client regarding the terms and responsibilities of the engagement before work begins.</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q3')"><span class="option-letter">D</span>To communicate significant deficiencies and material weaknesses to those charged with governance.</div>
+    </div>
+    <div class="feedback" id="q3-fb"></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="quiz-q-num">Question 4 &nbsp;&bull;&nbsp; Ch. 3 &mdash; Audit Tests</div>
+    <div class="quiz-q-text">An auditor examines a sales invoice to check that it was properly approved (control) and also verifies that the dollar amount matches the sales journal entry (substantive). This is an example of:</div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(this, false, 'q4')"><span class="option-letter">A</span>A test of controls only</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q4')"><span class="option-letter">B</span>A substantive analytical procedure</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q4')"><span class="option-letter">C</span>A substantive test of details only</div>
+      <div class="option" onclick="checkAnswer(this, true, 'q4')"><span class="option-letter">D</span>A dual-purpose test</div>
+    </div>
+    <div class="feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="quiz-q-num">Question 5 &nbsp;&bull;&nbsp; Ch. 4 &mdash; Risk</div>
+    <div class="quiz-q-text">When inherent risk and control risk are both assessed as high, how must the auditor respond to keep overall audit risk acceptably low?</div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(this, false, 'q5')"><span class="option-letter">A</span>Set detection risk high to compensate for the other elevated risks.</div>
+      <div class="option" onclick="checkAnswer(this, true, 'q5')"><span class="option-letter">B</span>Set detection risk low by performing more extensive substantive procedures.</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q5')"><span class="option-letter">C</span>Detection risk is fixed and cannot be adjusted by the auditor.</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q5')"><span class="option-letter">D</span>Reduce the scope of tests of controls to allow more time for planning.</div>
+    </div>
+    <div class="feedback" id="q5-fb"></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="quiz-q-num">Question 6 &nbsp;&bull;&nbsp; Ch. 5 &mdash; Evidence Reliability</div>
+    <div class="quiz-q-text">Which of the following is the most reliable form of audit evidence?</div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(this, false, 'q6')"><span class="option-letter">A</span>The controller's verbal explanation of an end-of-period adjustment</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q6')"><span class="option-letter">B</span>An internally prepared schedule provided by the client's accounting department</div>
+      <div class="option" onclick="checkAnswer(this, true, 'q6')"><span class="option-letter">C</span>A bank confirmation received directly by the auditor from the client's bank</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q6')"><span class="option-letter">D</span>A copy of an invoice obtained from the client's files</div>
+    </div>
+    <div class="feedback" id="q6-fb"></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="quiz-q-num">Question 7 &nbsp;&bull;&nbsp; Ch. 5 &mdash; Evidence Direction</div>
+    <div class="quiz-q-text">An auditor starts with cash receipt records and traces them forward to verify they were recorded as deposits. Which direction and assertion does this address?</div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(this, false, 'q7')"><span class="option-letter">A</span>Vouching; Occurrence</div>
+      <div class="option" onclick="checkAnswer(this, true, 'q7')"><span class="option-letter">B</span>Tracing; Completeness</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q7')"><span class="option-letter">C</span>Vouching; Completeness</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q7')"><span class="option-letter">D</span>Tracing; Occurrence</div>
+    </div>
+    <div class="feedback" id="q7-fb"></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="quiz-q-num">Question 8 &nbsp;&bull;&nbsp; Ch. 2 &mdash; Independence</div>
+    <div class="quiz-q-text">A senior auditor discovers her firm holds a direct financial interest in the audit client. Under professional standards, this:</div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(this, false, 'q8')"><span class="option-letter">A</span>Is acceptable as long as the investment is immaterial to the firm.</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q8')"><span class="option-letter">B</span>Is acceptable if both parties agree it does not affect professional judgment.</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q8')"><span class="option-letter">C</span>Only impairs independence if the auditor was aware of the investment at the start of the audit.</div>
+      <div class="option" onclick="checkAnswer(this, true, 'q8')"><span class="option-letter">D</span>Impairs independence — the auditor cannot lack independence under any circumstances.</div>
+    </div>
+    <div class="feedback" id="q8-fb"></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="quiz-q-num">Question 9 &nbsp;&bull;&nbsp; Ch. 3 &mdash; Materiality</div>
+    <div class="quiz-q-text">A $30,000 misstatement falls well below planning materiality, but it represents a payment made to a government official in violation of federal law. How should the auditor treat it?</div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(this, false, 'q9')"><span class="option-letter">A</span>Ignore it &mdash; the dollar amount is below planning materiality.</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q9')"><span class="option-letter">B</span>Propose a correcting entry but issue an unmodified opinion.</div>
+      <div class="option" onclick="checkAnswer(this, true, 'q9')"><span class="option-letter">C</span>Consider it qualitatively material regardless of dollar size due to its illegal nature.</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q9')"><span class="option-letter">D</span>Apply only the AICPA quantitative benchmark and conclude it is immaterial.</div>
+    </div>
+    <div class="feedback" id="q9-fb"></div>
+  </div>
+
+  <div class="quiz-q">
+    <div class="quiz-q-num">Question 10 &nbsp;&bull;&nbsp; Ch. 5 &mdash; Documentation</div>
+    <div class="quiz-q-text">Which of the following items belongs in the permanent audit file?</div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(this, false, 'q10')"><span class="option-letter">A</span>Current year adjusting journal entries</div>
+      <div class="option" onclick="checkAnswer(this, true, 'q10')"><span class="option-letter">B</span>The client's articles of incorporation and chart of accounts</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q10')"><span class="option-letter">C</span>Lead schedules for the current period</div>
+      <div class="option" onclick="checkAnswer(this, false, 'q10')"><span class="option-letter">D</span>The current year audit report</div>
+    </div>
+    <div class="feedback" id="q10-fb"></div>
+  </div>
+
+<div class="divider"></div>
+
+<!-- ── SECTION 3: MATCHING PROCEDURES ── -->
+<div class="section-label">Section 3</div>
+<div class="section-rule"></div>
+<div class="section-title">Matching &mdash; Audit Procedures</div>
+<p style="font-size:13.5px; color:var(--muted); margin-bottom:20px;">Click a procedure on the left, then click its matching description on the right. Correct pairs lock in green.</p>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:8px;">
+  <div class="matching-col-header">Procedure</div>
+  <div class="matching-col-header">Description</div>
+</div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:0 12px;" id="matching-grid">
+  <div class="match-item" data-id="obs" onclick="selectTerm(this)">Observation</div>
+  <div class="match-def" data-id="inq" onclick="selectDef(this)">Asking questions of knowledgeable individuals, internal or external to the client</div>
+  <div class="match-item" data-id="inq" onclick="selectTerm(this)">Inquiry</div>
+  <div class="match-def" data-id="conf" onclick="selectDef(this)">Corresponds directly with a third party to obtain evidence</div>
+  <div class="match-item" data-id="insp" onclick="selectTerm(this)">Inspection</div>
+  <div class="match-def" data-id="recap" onclick="selectDef(this)">Checking the mathematical accuracy of documents or records</div>
+  <div class="match-item" data-id="conf" onclick="selectTerm(this)">Confirmation</div>
+  <div class="match-def" data-id="obs" onclick="selectDef(this)">Watching a process or procedure being carried out by client personnel</div>
+  <div class="match-item" data-id="reper" onclick="selectTerm(this)">Reperformance</div>
+  <div class="match-def" data-id="scan" onclick="selectDef(this)">Using professional judgment to review accounting data and identify unusual items</div>
+  <div class="match-item" data-id="recap" onclick="selectTerm(this)">Recalculation</div>
+  <div class="match-def" data-id="insp" onclick="selectDef(this)">Examination of documents or physical assets</div>
+  <div class="match-item" data-id="scan" onclick="selectTerm(this)">Scanning</div>
+  <div class="match-def" data-id="reper" onclick="selectDef(this)">Independent execution of procedures or controls originally performed by client personnel</div>
+</div>
+<div style="margin-top:14px;">
+  <button class="match-btn" onclick="checkMatches()">Check Matches</button>
+  <button class="reset-btn" onclick="resetMatches()">Reset</button>
+  <span class="match-score" id="match-score"></span>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── SECTION 4: MATCHING ASSERTIONS ── -->
+<div class="section-label">Section 4</div>
+<div class="section-rule"></div>
+<div class="section-title">Matching &mdash; Management Assertions</div>
+<p style="font-size:13.5px; color:var(--muted); margin-bottom:20px;">Match each assertion to its correct definition.</p>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:8px;">
+  <div class="matching-col-header">Assertion</div>
+  <div class="matching-col-header">Definition</div>
+</div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:0 12px;" id="assert-grid">
+  <div class="match-item" data-id="exist" onclick="selectTerm2(this)">Existence</div>
+  <div class="match-def" data-id="ro" onclick="selectDef2(this)">The entity holds the rights to assets, and liabilities are the obligation of the entity</div>
+  <div class="match-item" data-id="ro" onclick="selectTerm2(this)">Rights &amp; Obligations</div>
+  <div class="match-def" data-id="comp" onclick="selectDef2(this)">All transactions that should have been recorded have been recorded</div>
+  <div class="match-item" data-id="comp" onclick="selectTerm2(this)">Completeness</div>
+  <div class="match-def" data-id="cutoff" onclick="selectDef2(this)">Transactions and events are recorded in the correct accounting period</div>
+  <div class="match-item" data-id="class" onclick="selectTerm2(this)">Classification</div>
+  <div class="match-def" data-id="exist" onclick="selectDef2(this)">Assets, liabilities, and equity interests exist</div>
+  <div class="match-item" data-id="pres" onclick="selectTerm2(this)">Presentation</div>
+  <div class="match-def" data-id="acc" onclick="selectDef2(this)">Amounts and data have been recorded appropriately</div>
+  <div class="match-item" data-id="acc" onclick="selectTerm2(this)">Accuracy</div>
+  <div class="match-def" data-id="class" onclick="selectDef2(this)">Transactions are recorded in the proper accounts</div>
+  <div class="match-item" data-id="cutoff" onclick="selectTerm2(this)">Cut-off</div>
+  <div class="match-def" data-id="pres" onclick="selectDef2(this)">Transactions are appropriately aggregated or disaggregated and clearly described</div>
+</div>
+<div style="margin-top:14px;">
+  <button class="match-btn" onclick="checkMatches2()">Check Matches</button>
+  <button class="reset-btn" onclick="resetMatches2()">Reset</button>
+  <span class="match-score" id="assert-score"></span>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── SECTION 5: ESSAY PREP ── -->
+<div class="section-label">Section 5</div>
+<div class="section-rule"></div>
+<div class="section-title">Essay Prep &mdash; Know All Four Topics</div>
+<p style="font-size:13.5px; color:var(--muted); margin-bottom:20px;">Click each topic to expand the study notes. One will be your essay question &mdash; prepare for all four.</p>
+
+<!-- Essay 1: AICPA Framework -->
+<div class="essay-card">
+  <div class="essay-card-header" onclick="toggleEssay(this)">
+    <h3>1 &nbsp;|&nbsp; AICPA Conceptual Framework for Members in Public Practice</h3>
+    <span class="toggle">+</span>
+  </div>
+  <div class="essay-card-body">
+    <p>The AICPA Conceptual Framework is a <strong>principles-based approach</strong> that guides members in identifying, evaluating, and responding to threats to compliance with the fundamental ethical principles. Know all five steps, especially the final documentation step.</p>
+
+    <div class="step-row"><span class="step-badge">1</span><div><strong>Identify the threat.</strong> Recognize any condition, circumstance, or relationship that could compromise compliance with the fundamental principles: objectivity, integrity, independence, professional competence, confidentiality, and professional behavior.</div></div>
+    <div class="step-row"><span class="step-badge">2</span><div><strong>Evaluate the significance of the threat.</strong> Consider both the likelihood and the potential magnitude. Is the threat already at an acceptable level, or does it require further action?</div></div>
+    <div class="step-row"><span class="step-badge">3</span><div><strong>Identify and apply safeguards.</strong> Safeguards may come from the profession (standards, licensing requirements), the client (governance structures, audit committees), or the firm (rotation policies, second-partner review, consultation). Apply safeguards to eliminate or reduce the threat to an acceptable level.</div></div>
+    <div class="step-row"><span class="step-badge">4</span><div><strong>Evaluate the residual threat.</strong> After safeguards are applied, assess whether the remaining threat is acceptably low. If not, the member must decline or discontinue the engagement.</div></div>
+    <div class="step-row highlight-step">
+      <span class="step-badge">5</span>
+      <div><strong>Document the analysis.</strong> This is the final &mdash; and most important &mdash; step. The member must document the threats identified, the evaluation process used, the safeguards applied, and the conclusion reached. Documentation creates an evidence trail that demonstrates professional judgment was exercised and the framework was properly followed. Without documentation, the analysis may as well not have happened.</div>
+    </div>
+
+    <p style="margin-top:16px;"><strong>The Five Threat Categories:</strong></p>
+    <ul>
+      <li><strong>Self-interest</strong> &mdash; a financial or other interest that inappropriately influences judgment (e.g., a contingent fee tied to a favorable outcome)</li>
+      <li><strong>Self-review</strong> &mdash; evaluating your own prior work (e.g., auditing financial statements the firm helped prepare)</li>
+      <li><strong>Advocacy</strong> &mdash; promoting a client's position to the point that objectivity is compromised</li>
+      <li><strong>Familiarity</strong> &mdash; a close relationship with the client leads to excessive trust or sympathy</li>
+      <li><strong>Intimidation</strong> &mdash; actual or perceived pressure from the client or management</li>
+    </ul>
+    <div class="essay-tip">For the essay: use the five-step structure to walk through the given scenario. Identify the specific threat type, explain its significance, describe the safeguard you would apply, evaluate whether it reduces the threat sufficiently, and emphasize that everything must be documented. If no safeguard is sufficient, the member must withdraw.</div>
+  </div>
+</div>
+
+<!-- Essay 2: Professional Skepticism -->
+<div class="essay-card">
+  <div class="essay-card-header" onclick="toggleEssay(this)">
+    <h3>2 &nbsp;|&nbsp; Professional Skepticism</h3>
+    <span class="toggle">+</span>
+  </div>
+  <div class="essay-card-body">
+    <p><strong>Professional skepticism</strong> is an attitude that includes a questioning mind and a critical assessment of audit evidence. It is required by both GAAS and PCAOB standards as part of due professional care.</p>
+    <p><strong>What professional skepticism is:</strong></p>
+    <ul>
+      <li>A <strong>questioning mind</strong> &mdash; not automatically accepting management's explanations or representations</li>
+      <li><strong>Critical assessment</strong> of audit evidence for sufficiency and appropriateness</li>
+      <li>Heightened alertness to conditions that may indicate <strong>fraud, error, or deliberate misstatement</strong></li>
+      <li>Willingness to <strong>challenge representations</strong> that seem inconsistent with other evidence</li>
+    </ul>
+    <p style="margin-top:12px;"><strong>Why it matters:</strong></p>
+    <ul>
+      <li>Required by GAAS and PCAOB as part of <strong>due professional care</strong></li>
+      <li>Reduces the risk that auditors are misled by management or accept <strong>insufficient evidence</strong></li>
+      <li>Essential to detecting <strong>fraud</strong>, which often involves intentional concealment of information</li>
+      <li>Protects the public interest and maintains the <strong>credibility and integrity</strong> of the audit function</li>
+    </ul>
+    <p style="margin-top:12px;"><strong>How it is applied:</strong></p>
+    <ul>
+      <li>Corroborating management explanations with <strong>independent, external evidence</strong> rather than taking them at face value</li>
+      <li>Conducting <strong>brainstorming sessions</strong> among the audit team at engagement start to discuss how fraud might occur at this client</li>
+      <li>Recognizing and managing <strong>cognitive biases</strong> (anchoring, confirmation bias) that can quietly undermine skeptical thinking</li>
+      <li>Actively evaluating evidence that <strong>contradicts</strong> prior conclusions, not just evidence that confirms them</li>
+      <li>Applying heightened scrutiny when <strong>fraud risk factors</strong> from the fraud triangle are present</li>
+    </ul>
+    <div class="essay-tip">Key distinction: professional skepticism does not mean assuming management is dishonest. It means the auditor does not assume management is honest without corroborating evidence. The auditor maintains an open, questioning mind and lets the evidence lead the conclusion.</div>
+  </div>
+</div>
+
+<!-- Essay 3: Materiality -->
+<div class="essay-card">
+  <div class="essay-card-header" onclick="toggleEssay(this)">
+    <h3>3 &nbsp;|&nbsp; Materiality</h3>
+    <span class="toggle">+</span>
+  </div>
+  <div class="essay-card-body">
+    <p><strong>Materiality</strong> is the magnitude of an omission or misstatement that, in light of the surrounding circumstances, makes it probable that the judgment of a reasonable person relying on the financial statements would have been changed or influenced.</p>
+    <p><strong>Why materiality is important to an audit:</strong></p>
+    <ul>
+      <li>Auditors cannot test everything &mdash; materiality helps them <strong>focus effort</strong> on what matters most to financial statement users</li>
+      <li>Determines which misstatements must be <strong>corrected or disclosed</strong> before an unmodified opinion can be issued</li>
+      <li>Directly influences the <strong>nature, timing, and extent</strong> of audit procedures throughout the engagement</li>
+      <li>Provides the basis for evaluating whether the aggregate of uncorrected misstatements is acceptable</li>
+    </ul>
+    <p style="margin-top:12px;"><strong>Quantitative vs. Qualitative:</strong></p>
+    <ul>
+      <li><strong>Quantitative</strong> &mdash; dollar thresholds (e.g., 5% of pre-tax income, 0.5% of total assets). These are starting points, not bright-line rules.</li>
+      <li><strong>Qualitative</strong> &mdash; the nature of the item can make even a small misstatement material: illegal payments, items that turn a profit into a loss, misstatements that affect regulatory compliance, or items involving key management personnel.</li>
+      <li>Materiality is <strong>largely a matter of professional judgment</strong> and must always consider both dimensions</li>
+    </ul>
+    <p style="margin-top:12px;"><strong>Planning vs. Performance Materiality:</strong></p>
+    <ul>
+      <li><strong>Planning materiality</strong> &mdash; set at the overall financial statement level at the start of the audit</li>
+      <li><strong>Performance materiality (tolerable misstatement)</strong> &mdash; set lower, at the account or assertion level, to protect against the risk that individually immaterial misstatements aggregate above planning materiality</li>
+    </ul>
+    <div class="essay-tip">Always discuss both the quantitative and qualitative dimensions. Emphasize that materiality is a matter of professional judgment &mdash; quantitative benchmarks are a starting point, not the final answer.</div>
+  </div>
+</div>
+
+<!-- Essay 4: Phases of the Audit -->
+<div class="essay-card">
+  <div class="essay-card-header" onclick="toggleEssay(this)">
+    <h3>4 &nbsp;|&nbsp; Phases of the Audit</h3>
+    <span class="toggle">+</span>
+  </div>
+  <div class="essay-card-body">
+    <p>A financial statement audit follows a structured sequence of phases. You should be able to <strong>identify, describe, and explain the purpose</strong> of each &mdash; not just name it.</p>
+    <ul>
+      <li><strong>Phase 1 &mdash; Client Acceptance &amp; Continuance:</strong> Evaluate management integrity, auditor independence and competence, and engagement risk. Communicate with the predecessor auditor for new clients. Issue the engagement letter to document the agreed-upon terms before work begins.</li>
+      <li><strong>Phase 2 &mdash; Preliminary Engagement Activities:</strong> Confirm independence and ethical compliance. Establish mutual understanding of engagement terms. Assemble the engagement team and assign responsibilities appropriately.</li>
+      <li><strong>Phase 3 &mdash; Plan the Audit:</strong> Develop the overall audit strategy. Set planning and performance materiality. Perform risk assessment procedures &mdash; obtain a thorough understanding of the client, its environment, and its internal control structure.</li>
+      <li><strong>Phase 4 &mdash; Consider &amp; Evaluate Internal Controls:</strong> Assess control risk. Test controls if the auditor plans to rely on them. Identify control deficiencies, significant deficiencies, and material weaknesses. Communicate findings to management and those charged with governance.</li>
+      <li><strong>Phase 5 &mdash; Substantive Procedures:</strong> Perform tests of details and substantive analytical procedures at the assertion level to detect material misstatements that internal controls did not prevent or detect.</li>
+      <li><strong>Phase 6 &mdash; Complete the Audit:</strong> Perform final analytical procedures. Evaluate all audit findings. Assess going concern. Review for subsequent events. Obtain the management representation letter. Communicate required matters to those charged with governance.</li>
+      <li><strong>Phase 7 &mdash; Issue the Audit Report:</strong> Form the audit opinion and issue the appropriate report &mdash; unmodified, qualified, adverse, or disclaimer of opinion.</li>
+    </ul>
+    <div class="essay-tip">Know the purpose of each phase, not just its name. A strong essay will explain what happens in each phase and why it matters to the overall integrity of the audit.</div>
+  </div>
+</div>
+
+<!-- CLOSING -->
+<div style="background:#E8F0FA; border-left:5px solid #1B3A6B; border-radius:4px; padding:22px 26px; margin-top:32px;">
+  <p style="font-family:Georgia,serif; font-size:15px; line-height:1.75; color:#1a2a3a; font-style:italic; margin:0;">Good luck on Exam 1. If you can explain these concepts in your own words rather than just recognize them from a list, you are well prepared. Trust your preparation and take your time.</p>
+  <p style="font-family:'Source Sans 3',Arial,sans-serif; font-size:13px; color:#5a6a8a; margin-top:10px; margin-bottom:0;">Questions? Post in the <strong>Module Q&amp;A forum</strong> or join the weekly Zoom. &mdash; Dr. Hamrick</p>
+</div>
+
+<script>
+  // ── FLASHCARD FILTER ──────────────────────────────────────────────────────
+  function filterCards(cat, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#card-grid .flashcard').forEach(card => {
+      const show = cat === 'all' || card.dataset.cat === cat;
+      card.style.display = show ? '' : 'none';
+    });
+  }
+
+  // ── KNOWLEDGE CHECK ───────────────────────────────────────────────────────
+  const feedbacks = {
+    q1:  { correct: "Correct! Think of concentric circles: Assurance (broadest) → Attestation (a subset) → Auditing (most specific, focused on financial statements).", wrong: "Think of concentric circles: Assurance is the outermost category, attestation is a type of assurance, and auditing is a specific type of attestation focused on financial statements." },
+    q2:  { correct: "Correct! Under SOX Section 301, the audit committee — composed of independent directors — is directly responsible for appointing, compensating, and overseeing the external auditor for public companies.", wrong: "Under SOX, management no longer hires the auditor. That responsibility shifted to the audit committee (independent board members) to strengthen auditor independence." },
+    q3:  { correct: "Correct! The engagement letter is a pre-audit agreement that documents the scope, responsibilities, fee arrangements, and form of the report before any work begins.", wrong: "The engagement letter is signed before the audit begins, not after. It establishes the terms and mutual understanding of the engagement — it is not the report, not the management letter, and not a year-end communication." },
+    q4:  { correct: "Correct! A dual-purpose test performs both functions in a single procedure: testing whether a control is operating (authorization check) and verifying the substance of the transaction (dollar amount).", wrong: "When one procedure simultaneously tests whether a control is working and substantively verifies a transaction amount, that is a dual-purpose test — one procedure, two types of evidence." },
+    q5:  { correct: "Correct! AR = IR × CR × DR. When IR and CR are high, the product is already large. To keep overall audit risk acceptably low, DR must be set very low, meaning more extensive and rigorous substantive procedures.", wrong: "Recall the audit risk model: AR = IR × CR × DR. High IR and CR mean the auditor must drive detection risk DOWN through more extensive substantive testing. Setting DR high would make overall AR unacceptably high." },
+    q6:  { correct: "Correct! A bank confirmation received directly by the auditor from an independent third party is among the most reliable evidence — it is external, independent, and obtained directly by the auditor rather than through the client.", wrong: "Evidence reliability hierarchy: External source obtained directly by auditor (highest) → External documents from client → Internal documents with strong controls → Oral inquiry (lowest). A bank confirmation from an independent bank is the strongest option listed." },
+    q7:  { correct: "Correct! Tracing goes from the source document forward to the accounting records and tests completeness — making sure everything that happened was actually recorded.", wrong: "Direction is everything. Tracing = source to books = completeness (was it recorded?). Vouching = books back to source = occurrence (did it actually happen?). Starting from cash receipt records and tracing forward = tracing for completeness." },
+    q8:  { correct: "Correct! Independence is absolute. There is no immateriality exception, no agreement-between-parties exception, and no awareness exception. A direct financial interest in an audit client always impairs independence.", wrong: "There are no exceptions to independence requirements. The answer is always that a direct financial interest in an audit client impairs independence — regardless of size, agreement, or when the auditor became aware." },
+    q9:  { correct: "Correct! Materiality is both quantitative and qualitative. An illegal payment to a government official is qualitatively material because of its nature — the type of misstatement matters, not just its size.", wrong: "Recall: materiality involves both quantitative and qualitative factors. The nature of a misstatement — especially one involving illegal activity — can make it material even when the dollar amount is small." },
+    q10: { correct: "Correct! The permanent file holds information relevant across multiple years: corporate structure, chart of accounts, key agreements, prior audited financial statements. Current-year items like adjusting entries and lead schedules go in the current file.", wrong: "The permanent file contains information that does not change year to year — corporate structure, the chart of accounts, long-term agreements. Current-year adjusting entries, lead schedules, and the audit report belong in the current file." }
+  };
+
+  function checkAnswer(el, isCorrect, qId) {
+    const options = el.closest('.options').querySelectorAll('.option');
+    options.forEach(o => { o.style.pointerEvents = 'none'; });
+    const fb = document.getElementById(qId + '-fb');
+    if (isCorrect) {
+      el.classList.add('correct');
+      fb.className = 'feedback correct-fb show';
+      fb.innerHTML = '&#10003;&nbsp; ' + feedbacks[qId].correct;
+    } else {
+      el.classList.add('incorrect');
+      options.forEach(o => { if (o !== el) o.classList.add('revealed-correct'); });
+      fb.className = 'feedback incorrect-fb show';
+      fb.innerHTML = '&#10007;&nbsp; ' + feedbacks[qId].wrong;
+    }
+  }
+
+  // ── MATCHING PROCEDURES ───────────────────────────────────────────────────
+  function selectTerm(el) {
+    if (el.classList.contains('matched-correct')) return;
+    document.querySelectorAll('#matching-grid .match-item.selected').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    attemptMatch('#matching-grid', 'match-score', 7);
+  }
+  function selectDef(el) {
+    if (el.classList.contains('matched-correct')) return;
+    document.querySelectorAll('#matching-grid .match-def.selected').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    attemptMatch('#matching-grid', 'match-score', 7);
+  }
+  function checkMatches() { attemptMatch('#matching-grid', 'match-score', 7); }
+
+  function attemptMatch(gridSel, scoreId, total) {
+    const grid = document.querySelector(gridSel);
+    const t = grid.querySelector('.match-item.selected');
+    const d = grid.querySelector('.match-def.selected');
+    if (!t || !d) return;
+    if (t.dataset.id === d.dataset.id) {
+      [t, d].forEach(el => { el.classList.remove('selected'); el.classList.add('matched-correct'); el.onclick = null; });
+    } else {
+      [t, d].forEach(el => el.classList.add('matched-wrong'));
+      setTimeout(() => { [t, d].forEach(el => el.classList.remove('matched-wrong', 'selected')); }, 850);
+    }
+    const matched = grid.querySelectorAll('.matched-correct').length / 2;
+    const s = document.getElementById(scoreId);
+    s.innerHTML = matched === total ? '&#10003; All ' + total + ' correct!' : (matched > 0 ? matched + ' of ' + total + ' matched' : '');
+  }
+
+  function resetMatches() {
+    document.querySelectorAll('#matching-grid .match-item, #matching-grid .match-def').forEach(el => {
+      const isTerm = el.classList.contains('match-item');
+      el.className = isTerm ? 'match-item' : 'match-def';
+      el.onclick = isTerm ? function(){ selectTerm(this); } : function(){ selectDef(this); };
+    });
+    document.getElementById('match-score').textContent = '';
+  }
+
+  // ── MATCHING ASSERTIONS ───────────────────────────────────────────────────
+  function selectTerm2(el) {
+    if (el.classList.contains('matched-correct')) return;
+    document.querySelectorAll('#assert-grid .match-item.selected').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    attemptMatch('#assert-grid', 'assert-score', 7);
+  }
+  function selectDef2(el) {
+    if (el.classList.contains('matched-correct')) return;
+    document.querySelectorAll('#assert-grid .match-def.selected').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    attemptMatch('#assert-grid', 'assert-score', 7);
+  }
+  function checkMatches2() { attemptMatch('#assert-grid', 'assert-score', 7); }
+
+  function resetMatches2() {
+    document.querySelectorAll('#assert-grid .match-item, #assert-grid .match-def').forEach(el => {
+      const isTerm = el.classList.contains('match-item');
+      el.className = isTerm ? 'match-item' : 'match-def';
+      el.onclick = isTerm ? function(){ selectTerm2(this); } : function(){ selectDef2(this); };
+    });
+    document.getElementById('assert-score').textContent = '';
+  }
+
+  // ── ESSAY ACCORDION ───────────────────────────────────────────────────────
+  function toggleEssay(header) {
+    const body = header.nextElementSibling;
+    const isOpen = body.classList.contains('open');
+    header.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+  }
+</script>
+</body>
+</html>
