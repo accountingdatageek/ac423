@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AC 423/523 Exam 2 Study Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1B3A6B; --navy-light: #2a5298; --gold: #C9A84C; --gold-light: #F0D98A;
+    --cream: #FAFAF7; --light-blue: #E8F0FA; --text: #1a1a2e; --muted: #5a6a8a;
+    --green: #1E6B3C; --green-light: #D4EDDA; --red: #8B1A1A; --red-light: #FDDEDE;
+    --border: #DDE4EF; --amber: #7A5C00; --amber-light: #FFF8E8;
+  }
+  body { font-family: Arial, Georgia, sans-serif; background: var(--cream); color: var(--text); line-height: 1.6; margin: 0; padding: 0; }
+
+  /* HERO */
+  .hero { background: var(--navy); padding: 40px 36px 32px; border-radius: 8px; margin-bottom: 32px; position: relative; overflow: hidden; }
+  .hero::before { content: ""; position: absolute; top: -40px; right: -40px; width: 180px; height: 180px; border-radius: 50%; background: rgba(201,168,76,0.12); }
+  .hero-label { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold-light); font-weight: 700; margin-bottom: 10px; }
+  .hero h1 { font-family: Georgia, serif; font-size: 28px; color: #fff; margin-bottom: 14px; line-height: 1.2; }
+  .hero p { font-size: 14.5px; color: #C8D8EA; max-width: 740px; line-height: 1.7; }
+  .hero-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .badge { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22); color: #fff; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; }
+
+  /* CHAPTER MAP */
+  .chapter-map { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
+  .chapter-card { flex: 1; min-width: 155px; background: #fff; border: 1px solid var(--border); border-top: 4px solid var(--navy); border-radius: 6px; padding: 14px; }
+  .ch-num { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+  .ch-title { font-family: Georgia, serif; font-size: 13px; color: var(--navy); font-weight: 700; line-height: 1.3; margin-bottom: 8px; }
+  .ch-topics { font-size: 11.5px; color: var(--muted); line-height: 1.6; }
+
+  /* SECTIONS */
+  .section-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 4px; }
+  .section-rule { width: 40px; height: 3px; background: var(--navy); border-radius: 2px; margin-bottom: 20px; }
+  .section-title { font-family: Georgia, serif; font-size: 22px; color: var(--navy); margin-bottom: 16px; }
+  .divider { border-top: 2px solid var(--border); margin: 36px 0; }
+
+  /* TABS */
+  .tab-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .tab-btn { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: #fff; color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.18s; }
+  .tab-btn.active, .tab-btn:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+  /* FLASHCARDS */
+  .card-grid { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 36px; }
+  .fc { perspective: 1000px; height: 180px; cursor: pointer; width: calc(33.333% - 10px); min-width: 240px; flex-shrink: 0; }
+  .fc-inner { position: relative; width: 100%; height: 100%; transition: transform 0.55s cubic-bezier(.4,0,.2,1); transform-style: preserve-3d; }
+  .fc.flipped .fc-inner { transform: rotateY(180deg); }
+  .fc-front, .fc-back { position: absolute; width: 100%; height: 100%; border-radius: 8px; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 16px; text-align: center; }
+  .fc-front { background: var(--navy); border: 1px solid var(--navy-light); }
+  .fc-back { background: var(--light-blue); border: 2px solid var(--navy); transform: rotateY(180deg); }
+  .fc-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+  .fc-term { font-family: Georgia, serif; font-size: 15px; color: #fff; line-height: 1.3; }
+  .fc-hint { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 10px; font-style: italic; }
+  .fc-def { font-size: 13px; color: var(--text); line-height: 1.55; }
+
+  /* QUIZ */
+  .quiz-q { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 20px 22px; margin-bottom: 14px; }
+  .quiz-num { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .quiz-text { font-size: 14.5px; font-weight: 600; color: var(--text); margin-bottom: 14px; line-height: 1.5; }
+  .opt { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 13.5px; background: var(--cream); color: var(--text); line-height: 1.45; margin-bottom: 8px; transition: all 0.18s; }
+  .opt:hover { border-color: var(--navy); background: var(--light-blue); }
+  .opt.correct { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 600; pointer-events: none; }
+  .opt.incorrect { border-color: var(--red); background: var(--red-light); color: var(--red); pointer-events: none; }
+  .opt.revshow { border-color: var(--green); background: var(--green-light); color: var(--green); opacity: 0.65; pointer-events: none; }
+  .opt-letter { font-weight: 700; font-size: 12px; min-width: 20px; text-align: center; margin-top: 1px; flex-shrink: 0; }
+  .feedback { margin-top: 12px; padding: 10px 14px; border-radius: 6px; font-size: 13px; line-height: 1.5; display: none; }
+  .feedback.show { display: block; }
+  .fb-ok { background: var(--green-light); color: var(--green); border-left: 4px solid var(--green); }
+  .fb-bad { background: var(--red-light); color: var(--red); border-left: 4px solid var(--red); }
+
+  /* MATCHING */
+  .match-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+  .match-col-hdr { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: var(--muted); padding: 0 0 6px 4px; border-bottom: 2px solid var(--border); margin-bottom: 8px; }
+  .mterm { background: var(--navy); color: #fff; border-radius: 6px; padding: 10px 14px; font-size: 13px; font-weight: 600; cursor: pointer; border: 2px solid transparent; margin-bottom: 8px; transition: all 0.15s; }
+  .mterm:hover { background: var(--navy-light); }
+  .mterm.sel { border-color: var(--gold); background: var(--navy-light); }
+  .mterm.ok { background: var(--green); border-color: var(--green); cursor: default; }
+  .mterm.bad { background: var(--red); border-color: var(--red); }
+  .mdef { background: var(--light-blue); border: 1.5px solid var(--border); border-radius: 6px; padding: 10px 14px; font-size: 13px; color: var(--text); cursor: pointer; line-height: 1.45; margin-bottom: 8px; transition: all 0.15s; }
+  .mdef:hover { border-color: var(--navy); background: #dce8f8; }
+  .mdef.sel { border-color: var(--gold); background: var(--amber-light); }
+  .mdef.ok { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 600; cursor: default; }
+  .mdef.bad { border-color: var(--red); background: var(--red-light); }
+  .match-btn { background: var(--navy); color: #fff; border: none; border-radius: 6px; padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: background 0.18s; }
+  .match-btn:hover { background: var(--navy-light); }
+  .reset-btn { background: transparent; border: 1.5px solid var(--border); color: var(--muted); border-radius: 6px; padding: 9px 18px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: 10px; transition: all 0.18s; }
+  .reset-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .match-score { margin-left: 14px; font-size: 13px; color: var(--muted); font-weight: 600; }
+
+  /* ALERT BOX */
+  .alert-box { border-radius: 8px; padding: 18px 22px; margin-bottom: 28px; }
+  .alert-gold { background: var(--amber-light); border: 2px solid var(--gold); }
+  .alert-blue { background: var(--light-blue); border-left: 5px solid var(--navy); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">AC 423/523 &mdash; Auditing &nbsp;|&nbsp; Exam 2 Preparation</div>
+  <h1>Exam 2 Study Guide</h1>
+  <p>This interactive study guide covers all material from Modules 5&ndash;7, Chapters 6, 7, 8, 9, 17, and 18. Filter flashcards by chapter, test yourself with the knowledge check questions, and work through both matching exercises.</p>
+  <div class="hero-badges">
+    <span class="badge">Ch. 6 &mdash; Internal Control</span>
+    <span class="badge">Ch. 7 &mdash; Auditing ICFR</span>
+    <span class="badge">Ch. 8 &mdash; Sampling: Controls</span>
+    <span class="badge">Ch. 9 &mdash; Sampling: Substantive</span>
+    <span class="badge">Ch. 17 &mdash; Completing the Audit</span>
+    <span class="badge">Ch. 18 &mdash; Audit Reports</span>
+  </div>
+</div>
+
+<!-- CHAPTER MAP -->
+<div class="chapter-map">
+  <div class="chapter-card">
+    <div class="ch-num">Chapter 6</div>
+    <div class="ch-title">Internal Control in a Financial Statement Audit</div>
+    <div class="ch-topics">COSO framework &bull; Segregation of duties &bull; Control risk &bull; Reliance vs. substantive strategy &bull; Documenting controls</div>
+  </div>
+  <div class="chapter-card">
+    <div class="ch-num">Chapter 7</div>
+    <div class="ch-title">Auditing Internal Control over Financial Reporting</div>
+    <div class="ch-topics">SOX Section 404 &bull; Integrated audit &bull; Control deficiencies &bull; Significant deficiency &bull; Material weakness &bull; Entity-level controls &bull; GAS</div>
+  </div>
+  <div class="chapter-card">
+    <div class="ch-num">Chapter 8</div>
+    <div class="ch-title">Audit Sampling: Tests of Controls</div>
+    <div class="ch-topics">Statistical vs. nonstatistical &bull; Sampling risk &bull; Deviation rates &bull; Confidence level &bull; Tolerable deviation rate &bull; Sample size factors</div>
+  </div>
+  <div class="chapter-card">
+    <div class="ch-num">Chapter 9</div>
+    <div class="ch-title">Audit Sampling: Substantive Tests</div>
+    <div class="ch-topics">Incorrect acceptance &bull; Incorrect rejection &bull; Type I &amp; II errors &bull; Tolerable misstatement &bull; Sample size factors &bull; Precision</div>
+  </div>
+  <div class="chapter-card">
+    <div class="ch-num">Chapter 17</div>
+    <div class="ch-title">Completing the Audit Engagement</div>
+    <div class="ch-topics">Loss contingencies &bull; Subsequent events &bull; Lawyer letters &bull; Management rep letter &bull; Going concern &bull; Analytical procedures</div>
+  </div>
+  <div class="chapter-card">
+    <div class="ch-num">Chapter 18</div>
+    <div class="ch-title">Reports on Audited Financial Statements</div>
+    <div class="ch-topics">Unmodified opinion &bull; Qualified opinion &bull; Adverse opinion &bull; Disclaimer &bull; Going concern &bull; CAMs &bull; Management responsibility</div>
+  </div>
+</div>
+
+<!-- ALERT -->
+<div class="alert-box alert-gold">
+  <p style="font-size:14px;font-weight:700;color:var(--amber);margin-bottom:6px;">&#9998; &nbsp;No Essay on Exam 2</p>
+  <p style="font-size:13.5px;color:var(--amber);line-height:1.6;">Exam 2 is objective only. Focus your energy on understanding concepts well enough to apply them in multiple choice scenarios &mdash; not just recognize definitions. The questions will test your ability to distinguish between similar concepts such as significant deficiency vs. material weakness, Type I vs. Type II errors, and Type I vs. Type II subsequent events.</p>
+</div>
+
+<!-- SECTION 1: FLASHCARDS -->
+<div class="section-label">Section 1</div>
+<div class="section-rule"></div>
+<div class="section-title">Key Concepts &mdash; Flashcards</div>
+<p style="font-size:13.5px;color:var(--muted);margin-bottom:16px;">Filter by chapter, then click any card to flip between term and definition.</p>
+
+<div class="tab-row" id="tab-row">
+  <button class="tab-btn active" onclick="filterCards('all',this)">All</button>
+  <button class="tab-btn" onclick="filterCards('ch6',this)">Ch. 6</button>
+  <button class="tab-btn" onclick="filterCards('ch7',this)">Ch. 7</button>
+  <button class="tab-btn" onclick="filterCards('ch8',this)">Ch. 8</button>
+  <button class="tab-btn" onclick="filterCards('ch9',this)">Ch. 9</button>
+  <button class="tab-btn" onclick="filterCards('ch17',this)">Ch. 17</button>
+  <button class="tab-btn" onclick="filterCards('ch18',this)">Ch. 18</button>
+</div>
+
+<div class="card-grid" id="card-grid"></div>
+
+<!-- SECTION 2: KNOWLEDGE CHECK -->
+<div class="divider"></div>
+<div class="section-label">Section 2</div>
+<div class="section-rule"></div>
+<div class="section-title">Knowledge Check &mdash; Practice Questions</div>
+<p style="font-size:13.5px;color:var(--muted);margin-bottom:20px;">Different scenarios and wording from the exam &mdash; same concepts. Select an answer for instant feedback.</p>
+<div id="quiz-container"></div>
+
+<!-- SECTION 3: MATCHING — CONTROL DEFICIENCIES -->
+<div class="divider"></div>
+<div class="section-label">Section 3</div>
+<div class="section-rule"></div>
+<div class="section-title">Matching &mdash; Control Deficiency Classifications</div>
+<p style="font-size:13.5px;color:var(--muted);margin-bottom:20px;">Click a term on the left, then click its matching description on the right. Correct pairs lock green.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px;">
+  <div class="match-col-hdr">Term</div>
+  <div class="match-col-hdr">Description</div>
+</div>
+<div class="match-cols" id="defic-grid"></div>
+<div style="margin-top:14px;">
+  <button class="match-btn" onclick="checkMatch('defic',5)">Check Matches</button>
+  <button class="reset-btn" onclick="resetMatch('defic',deficPairs,'defic-grid')">Reset</button>
+  <span class="match-score" id="defic-score"></span>
+</div>
+
+<!-- SECTION 4: MATCHING — SAMPLING TERMS -->
+<div class="divider"></div>
+<div class="section-label">Section 4</div>
+<div class="section-rule"></div>
+<div class="section-title">Matching &mdash; Audit Sampling Terms</div>
+<p style="font-size:13.5px;color:var(--muted);margin-bottom:20px;">Match each sampling term to its correct definition.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px;">
+  <div class="match-col-hdr">Term</div>
+  <div class="match-col-hdr">Definition</div>
+</div>
+<div class="match-cols" id="samp-grid"></div>
+<div style="margin-top:14px;">
+  <button class="match-btn" onclick="checkMatch('samp',7)">Check Matches</button>
+  <button class="reset-btn" onclick="resetMatch('samp',sampPairs,'samp-grid')">Reset</button>
+  <span class="match-score" id="samp-score"></span>
+</div>
+
+<!-- CLOSING -->
+<div class="divider"></div>
+<div class="alert-box alert-blue">
+  <p style="font-family:Georgia,serif;font-size:15px;line-height:1.75;color:#1a2a3a;font-style:italic;margin:0;">Good luck on Exam 2. The most common mistakes on this exam come from confusing similar-sounding terms &mdash; know the specific definitions and be ready to apply them to a scenario, not just recognize them in isolation.</p>
+  <p style="font-size:13px;color:var(--muted);margin-top:10px;margin-bottom:0;">Questions? Post in the <strong>Module Q&amp;A forum</strong> or join the weekly Zoom. &mdash; Dr. Hamrick</p>
+</div>
+
+<script>
+// ── FLASHCARD DATA ────────────────────────────────────────────────────────
+var cards = [
+  // CH 6
+  {cat:"ch6",label:"Ch. 6 — COSO",term:"The Five COSO Components",def:"<strong>Control Environment</strong>, <strong>Risk Assessment</strong>, <strong>Control Activities</strong>, <strong>Information &amp; Communication</strong>, and <strong>Monitoring Activities</strong>. Together they form the integrated framework for internal control."},
+  {cat:"ch6",label:"Ch. 6 — Controls",term:"Segregation of Duties",def:"Effective segregation separates three functions: <strong>Authorization</strong> (approving transactions), <strong>Recording</strong> (entering them in the books), and <strong>Custody</strong> (physical control of assets). No one person should perform more than one."},
+  {cat:"ch6",label:"Ch. 6 — Strategy",term:"Reliance Strategy vs. Substantive Strategy",def:"<strong>Reliance strategy</strong>: auditor tests controls and reduces substantive procedures when controls are effective. <strong>Substantive strategy</strong>: auditor sets control risk at maximum and relies on <em>increased tests of details</em> rather than controls."},
+  {cat:"ch6",label:"Ch. 6 — Documentation",term:"Documenting Internal Controls",def:"The auditor may use any combination of <strong>narratives, questionnaires, or flowcharts</strong> to document understanding of internal controls. No single form is required. For complex IT systems, flowcharts are most commonly used."},
+  {cat:"ch6",label:"Ch. 6 — Controls",term:"Control Environment",def:"The foundation of internal control. Reflects the <strong>tone at the top</strong> — management’s philosophy, ethics, integrity, and commitment to competence. Also includes governance structures such as the board and audit committee. Influences the effectiveness of all other components."},
+  {cat:"ch6",label:"Ch. 6 — Evidence",term:"Testing Segregation of Duties",def:"Because segregation of duties controls often leave <strong>no transaction trail</strong>, the primary audit procedure used to test them is <strong>observation</strong> — directly watching employees perform their assigned functions."},
+  {cat:"ch6",label:"Ch. 6 — Governance",term:"Effective Audit Committee",def:"An effective audit committee is <strong>independent of management</strong>, asks management difficult questions, and interacts regularly with internal auditors. A committee comprised <em>mostly of management</em> is NOT effective — it lacks the independence needed to provide oversight."},
+
+  // CH 7
+  {cat:"ch7",label:"Ch. 7 — SOX",term:"SOX Section 404 — Integrated Audit",def:"Requires management to assess and report on ICFR effectiveness, and requires the external auditor to <strong>conduct two audits in an integrated way</strong>: (1) an audit of internal control over financial reporting and (2) an audit of the financial statements."},
+  {cat:"ch7",label:"Ch. 7 — Deficiencies",term:"Control Deficiency",def:"Exists when the design or operation of a control does not allow management or employees to prevent or detect misstatements on a timely basis. The baseline category — less severe than a significant deficiency or material weakness."},
+  {cat:"ch7",label:"Ch. 7 — Deficiencies",term:"Significant Deficiency",def:"A deficiency, or combination of deficiencies, that is <strong>less severe than a material weakness</strong> but important enough to <strong>merit attention by those charged with governance</strong>. There is a reasonable possibility of misstatement, but it is not material."},
+  {cat:"ch7",label:"Ch. 7 — Deficiencies",term:"Material Weakness",def:"A deficiency, or combination of deficiencies, such that there is a <strong>reasonable possibility that a material misstatement</strong> will not be prevented or detected. The most severe classification. Must be disclosed in management’s ICFR report."},
+  {cat:"ch7",label:"Ch. 7 — Controls",term:"Entity-Level Controls",def:"Controls that operate at the organization-wide level: <strong>management’s risk assessment process</strong>, <strong>controls to monitor results of operations</strong>, and the <strong>period-end financial reporting process</strong>. All three are examples of entity-level controls."},
+  {cat:"ch7",label:"Ch. 7 — Technology",term:"Generalized Audit Software (GAS)",def:"Software that allows auditors to directly access and analyze client data files without specialized programming skills. Key advantage: <strong>limited IT expertise is required.</strong> Used for searching records, selecting samples, and identifying unusual balances. Cannot inspect physical inventory."},
+  {cat:"ch7",label:"Ch. 7 — SOX",term:"SOX Applicability",def:"SOX requirements, including Section 404 ICFR reporting, apply only to <strong>publicly traded companies</strong>. Private companies are not required to comply. This is a commonly tested true/false concept."},
+
+  // CH 8
+  {cat:"ch8",label:"Ch. 8 — Sampling",term:"Statistical vs. Nonstatistical Sampling",def:"Both are permitted by auditing standards. <strong>Statistical sampling</strong> uses probability theory to mathematically measure sampling risk. <strong>Nonstatistical sampling</strong> relies on <em>professional judgment</em> rather than the laws of probability to reach a conclusion."},
+  {cat:"ch8",label:"Ch. 8 — Risk",term:"Sampling Risk: Overreliance",def:"The risk of assessing control risk <strong>too low</strong> — the auditor concludes controls are effective when they are not. Affects <em>audit effectiveness</em>. Also called the risk of overreliance or Type II error in the controls context."},
+  {cat:"ch8",label:"Ch. 8 — Risk",term:"Sampling Risk: Underreliance",def:"The risk of assessing control risk <strong>too high</strong> — the sample does not support the auditor’s planned assessed level of control risk when the true effectiveness of the controls would justify that assessment. Affects <em>audit efficiency</em>."},
+  {cat:"ch8",label:"Ch. 8 — Sampling",term:"Confidence Level",def:"The complement of sampling risk. If sampling risk is 5%, the confidence level is 95%. A higher confidence level requires a <strong>larger sample size</strong>. The auditor controls confidence level when designing the sample."},
+  {cat:"ch8",label:"Ch. 8 — Sampling",term:"Sample Size: Tests of Controls",def:"Sample size for tests of controls increases when: <strong>desired confidence level increases</strong>, <strong>tolerable deviation rate decreases</strong>, or <strong>expected population deviation rate increases</strong>. Greater reliance on controls means a larger sample is needed to justify that reliance."},
+  {cat:"ch8",label:"Ch. 8 — Deviations",term:"Qualitative Evaluation of Deviations",def:"Beyond counting deviations, the auditor evaluates their nature. A deviation is more concerning if it was <strong>intentionally concealed</strong> (e.g., by a forged document) than if it was caused by an employee’s oversight or is an isolated incident."},
+
+  // CH 9
+  {cat:"ch9",label:"Ch. 9 — Risk",term:"Type I Error: Incorrect Rejection",def:"The risk that the sample leads the auditor to conclude an account balance is <strong>materially misstated when it is not</strong>. Affects <em>audit efficiency</em> — the auditor does unnecessary additional work. Also called the risk of incorrect rejection or underreliance."},
+  {cat:"ch9",label:"Ch. 9 — Risk",term:"Type II Error: Incorrect Acceptance",def:"The risk that the sample leads the auditor to conclude an account balance is <strong>not materially misstated when it is</strong>. Affects <em>audit effectiveness</em> — the auditor fails to detect a material misstatement. Also called the risk of incorrect acceptance or overreliance."},
+  {cat:"ch9",label:"Ch. 9 — Sampling",term:"Sample Size: Substantive Tests",def:"Sample size for substantive tests of details <strong>increases</strong> when: tolerable misstatement <em>decreases</em>, expected misstatement <em>increases</em>, desired confidence level <em>increases</em>, or reliance on controls and analytical procedures <em>decreases</em>."},
+  {cat:"ch9",label:"Ch. 9 — Sampling",term:"Precision",def:"The difference between the <strong>expected deviation (or misstatement) rate and the tolerable rate</strong>. Precision reflects how much room there is between what the auditor expects to find and the threshold at which they would modify their conclusion."},
+  {cat:"ch9",label:"Ch. 9 — Sampling",term:"Haphazard Selection",def:"A nonstatistical selection method in which the auditor selects items without a structured technique but <strong>without conscious bias</strong> — not randomly, but also not intentionally skewed. It does <em>not</em> allow the auditor to select items with bias."},
+  {cat:"ch9",label:"Ch. 9 — Evidence",term:"Audit Sampling Not Used For Inquiry",def:"Audit sampling is used for procedures applied to a <em>population of items</em>. <strong>Inquiry</strong> is directed to specific knowledgeable individuals, not a population — so sampling does not apply to it. Sampling is used for inspection, reperformance, and confirmation."},
+
+  // CH 17
+  {cat:"ch17",label:"Ch. 17 — Contingencies",term:"Loss Contingency Treatment",def:"<strong>Probable + estimable</strong> = <em>record</em> in the financial statements. <strong>Reasonably possible</strong> OR <strong>probable but not estimable</strong> = <em>disclose</em> in footnotes only. <strong>Remote</strong> = neither record nor disclose. FASB ASC 450 governs."},
+  {cat:"ch17",label:"Ch. 17 — Contingencies",term:"Lawyer Letter (Audit Inquiry Letter)",def:"The auditor’s primary means of corroborating management’s information about litigation. The auditor sends a letter to the client’s attorneys requesting their assessment of pending or threatened litigation. Refusal to respond is treated as a <strong>scope limitation</strong>."},
+  {cat:"ch17",label:"Ch. 17 — Subsequent Events",term:"Type I Subsequent Events",def:"Events that provide <strong>additional evidence about conditions that existed at the balance sheet date</strong>. Require <em>adjustment</em> of the financial statements. Example: settling a lawsuit for an amount different from the recorded estimate."},
+  {cat:"ch17",label:"Ch. 17 — Subsequent Events",term:"Type II Subsequent Events",def:"Events that provide evidence about conditions that <strong>arose after the balance sheet date</strong>. Require <em>disclosure</em> in the financial statements but not adjustment. Example: a tornado destroying the company’s factory after year-end."},
+  {cat:"ch17",label:"Ch. 17 — Subsequent Events",term:"Auditor’s Search Period for Subsequent Events",def:"The auditor actively searches for subsequent events from the <strong>balance sheet date through the date of the auditor’s report</strong>. Events after the report date are handled differently and are not subject to active search."},
+  {cat:"ch17",label:"Ch. 17 — Wrap-Up",term:"Management Representation Letter",def:"Obtained from management near the <strong>date of the auditor’s report</strong> (not the balance sheet date). Confirms management’s representations about the financial statements. One of the last procedures performed in the audit."},
+  {cat:"ch17",label:"Ch. 17 — Wrap-Up",term:"Final Analytical Procedures",def:"Performed at the <strong>completion stage</strong> of the audit. Purpose: assess conclusions reached on financial statement components, evaluate overall financial statement presentation, and recalculate ratios to evaluate the effect of audit adjustments. They do <em>not</em> revise the audit plan at this stage."},
+  {cat:"ch17",label:"Ch. 17 — Communication",term:"Required Communication with Governance",def:"Auditors must communicate: going concern considerations, significant findings, internal control deficiencies at the significant deficiency or material weakness level, and other required matters. Previously reported significant deficiencies <em>do not</em> need to be re-communicated after every subsequent audit."},
+
+  // CH 18
+  {cat:"ch18",label:"Ch. 18 — Opinions",term:"Four Types of Audit Opinions",def:"<strong>Unmodified</strong>: financial statements are fairly presented. <strong>Qualified</strong>: except for a specific matter, fairly presented. <strong>Adverse</strong>: not fairly presented (material and pervasive misstatement). <strong>Disclaimer</strong>: the auditor does not express an opinion (scope limitation or lack of independence)."},
+  {cat:"ch18",label:"Ch. 18 — Opinions",term:"Disclaimer of Opinion",def:"Issued when the auditor <strong>lacks independence</strong> or when there is a <strong>severe scope limitation</strong>. When independence is impaired, the auditor <em>must</em> disclaim — there is no discretion. The auditor does not express any opinion on the financial statements."},
+  {cat:"ch18",label:"Ch. 18 — Responsibility",term:"Who Is Responsible for Financial Statements?",def:"<strong>Management</strong> is responsible for the fairness of the representations made in the financial statements. The auditor’s role is to express an <em>opinion</em> on those statements — not to prepare them or guarantee their accuracy."},
+  {cat:"ch18",label:"Ch. 18 — Going Concern",term:"Going Concern — Auditor’s Responsibility",def:"When the auditor has substantial doubt about going concern, the responsibility is to <strong>consider the adequacy of disclosure</strong> about the entity’s possible inability to continue. The auditor does not issue an adverse opinion solely because of going concern doubt."},
+  {cat:"ch18",label:"Ch. 18 — Reports",term:"Comparative Financial Statements",def:"When prior year financial statements are presented alongside the current year, the <strong>continuing auditor’s report covers both years</strong>. The auditor does not issue two separate reports or refer only to the current year."},
+];
+
+// ── KNOWLEDGE CHECK DATA ──────────────────────────────────────────────────
+var questions = [
+  {num:1,tag:"Ch. 6 — Segregation of Duties",q:"Which of the following correctly states the three functions that must be separated for proper segregation of duties?",opts:["Authorization, execution, and payment","Authorization, recording, and custody","Custody, execution, and reporting","Authorization, payment, and recording"],correct:1,ok:"Correct! The three functions that must be separated are Authorization (approving transactions), Recording (entering them in the books), and Custody (physical control of assets).",bad:"The three functions that must be separated are Authorization, Recording, and Custody. Combining any two of these in one person creates an opportunity for undetected fraud."},
+  {num:2,tag:"Ch. 6 — Control Environment",q:"A CEO requires that the internal audit function report only to them and not communicate directly with the audit committee. Which COSO component does this most closely relate to?",opts:["Information and communication","Risk assessment","Control environment","Control activities"],correct:2,ok:"Correct! The control environment reflects tone at the top and governance structures. Restricting the internal audit function’s access to the audit committee undermines the independence of oversight — a control environment failure.",bad:"This scenario involves how the organization is governed and the ethical tone set at the top — the Control Environment. The control environment includes governance structures and the board’s oversight responsibilities."},
+  {num:3,tag:"Ch. 6 — Strategy",q:"How does a substantive strategy differ from a reliance strategy?",opts:["It sets control risk at a minimum level.","It relies on increased verbal representations from management.","It includes extra tests of controls.","It includes increased tests of details of transactions and balances."],correct:3,ok:"Correct! A substantive strategy sets control risk at maximum and compensates with more extensive tests of details. The auditor does not rely on controls and therefore needs more substantive evidence.",bad:"A substantive strategy means the auditor does not rely on controls and instead performs more extensive tests of details of transactions and balances to detect misstatements directly."},
+  {num:4,tag:"Ch. 7 — Integrated Audit",q:"Under SOX Section 404, an integrated audit means the auditor must:",opts:["Integrate the same objectives whether auditing internal control or auditing the financial statements.","Have two independent CPA firms work together on the audit.","Conduct two audits — one on ICFR effectiveness and one on the financial statements — in an integrated way.","Consider the integrated thoughts of everyone on the audit staff."],correct:2,ok:"Correct! An integrated audit combines the ICFR audit with the financial statement audit. The auditor conducts both simultaneously in an integrated way, allowing work on one to inform the other.",bad:"An integrated audit means conducting both an audit of internal control over financial reporting and an audit of the financial statements in an integrated, combined way — not two separate sequential audits."},
+  {num:5,tag:"Ch. 7 — Deficiency Classification",q:"A control deficiency implies there is a reasonable possibility of a misstatement that is significant but not material. How is this classified?",opts:["A control deficiency","A material weakness","A probable deficiency","A significant deficiency"],correct:3,ok:"Correct! A significant deficiency is less severe than a material weakness but important enough to merit attention by those charged with governance. The possibility of misstatement exists but is not at the material level.",bad:"This is the definition of a significant deficiency — less severe than a material weakness, but important enough that those charged with governance need to know about it."},
+  {num:6,tag:"Ch. 7 — GAS",q:"Which of the following is an auditor LEAST likely to perform using generalized audit software?",opts:["Searching accounts receivable for credit balances","Investigating inventory for possible damaged goods","Selecting accounts receivable for confirmations","Listing unusually large inventory balances"],correct:1,ok:"Correct! GAS works with electronic data files. Investigating inventory for physically damaged goods requires physical inspection — something software cannot do. GAS is limited to procedures performable on data in electronic form.",bad:"GAS is limited to procedures that can be performed on electronic data. Inspecting inventory for physical damage requires human observation, not data analysis. That task is outside the scope of audit software."},
+  {num:7,tag:"Ch. 8 — Sampling Risk",q:"The risk that a sample does not support the auditor’s planned assessed level of control risk when the true operating effectiveness of internal controls would actually justify that assessment is known as:",opts:["The risk of overreliance","The risk of assessing control risk too low","The risk of incorrect acceptance","The risk of assessing control risk too high (underreliance)"],correct:3,ok:"Correct! Assessing control risk too high (underreliance) means the auditor concludes controls are less effective than they actually are. This affects efficiency — the auditor does more work than necessary.",bad:"When the sample causes the auditor to conclude that controls are worse than they actually are, the auditor assesses control risk too high. This is the risk of underreliance and it hurts audit efficiency."},
+  {num:8,tag:"Ch. 8 — Sample Size",q:"In determining sample size for a test of controls, the auditor should consider expected deviation rate, desired confidence level, and:",opts:["Risk of incorrect acceptance","Nature and cause of deviations","Population size","Tolerable deviation rate"],correct:3,ok:"Correct! The three key inputs to sample size for tests of controls are: expected population deviation rate, desired confidence level, and tolerable deviation rate.",bad:"The three key inputs for sample size in tests of controls are: (1) expected population deviation rate, (2) desired confidence level, and (3) tolerable deviation rate."},
+  {num:9,tag:"Ch. 9 — Type I and II Errors",q:"The risk of incorrect acceptance and the risk of overreliance (Type II Errors) relate to the:",opts:["Efficiency of the audit","Preliminary estimates of materiality","Allowable risk of tolerable error","Effectiveness of the audit"],correct:3,ok:"Correct! Type II errors (incorrect acceptance and overreliance) mean the auditor missed something they should have caught. This is an effectiveness problem — the audit did not accomplish what it was supposed to.",bad:"Type II errors affect audit effectiveness — the auditor fails to detect a problem that exists. Type I errors (incorrect rejection and underreliance) affect efficiency because they cause unnecessary additional work."},
+  {num:10,tag:"Ch. 9 — Sample Size",q:"All other factors equal, which of the following would lead to a larger sample size for a substantive test of account balances?",opts:["Greater reliance on internal controls","Smaller expected frequency of misstatements","Smaller measure of tolerable misstatement","Greater reliance on analytical procedures"],correct:2,ok:"Correct! A smaller tolerable misstatement means the auditor needs more precision, which requires a larger sample. The lower the threshold for acceptable error, the more evidence is needed.",bad:"A smaller tolerable misstatement means there is less room for error, so more evidence (a larger sample) is needed to reach a reliable conclusion. The other factors listed would all decrease sample size."},
+  {num:11,tag:"Ch. 17 — Contingencies",q:"A contingent loss is judged to be reasonably possible but the amount cannot be reasonably estimated. How should it be treated?",opts:["Record it in the financial statements and disclose it in the footnotes.","Record it in the financial statements only.","Disclose it in footnotes only — do not record it.","Neither record nor disclose it."],correct:2,ok:"Correct! When the outcome is reasonably possible OR when it is probable but cannot be estimated, footnote disclosure is required but no journal entry is recorded.",bad:"Under FASB ASC 450: Probable + estimable = record. Reasonably possible (or probable but not estimable) = disclose in footnotes only. Remote = no disclosure required."},
+  {num:12,tag:"Ch. 17 — Subsequent Events",q:"A company’s factory is destroyed by a tornado two weeks after the balance sheet date. This is:",opts:["A Type I subsequent event requiring adjustment of the financial statements.","Not a subsequent event because it occurred after year-end.","A Type II subsequent event requiring disclosure but not adjustment.","A contingent liability that must be recorded at the balance sheet date."],correct:2,ok:"Correct! A tornado after the balance sheet date is a Type II event — it arose after year-end and provides no information about conditions that existed at the balance sheet date. Disclosure is required; adjustment is not.",bad:"Type I events provide evidence about conditions existing AT the balance sheet date (requiring adjustment). Type II events arise AFTER the balance sheet date (requiring disclosure only). A post-year-end tornado is a Type II event."},
+  {num:13,tag:"Ch. 17 — Wrap-Up",q:"Which of the following audit procedures is ordinarily performed last?",opts:["Confirming accounts payable","Testing the purchasing function","Reading minutes of directors’ meetings","Obtaining the management representation letter"],correct:3,ok:"Correct! The management representation letter is dated as of the date of the auditor’s report and is one of the final procedures before the report is issued.",bad:"The management representation letter is obtained near the very end of the audit, coinciding with the date of the auditor’s report. It is one of the last procedures performed."},
+  {num:14,tag:"Ch. 18 — Opinions",q:"When an auditor lacks independence, the appropriate report is:",opts:["A qualified opinion with an explanatory paragraph","An adverse opinion","A disclaimer of opinion","An unmodified opinion with emphasis of matter paragraph"],correct:2,ok:"Correct! Lack of independence requires a disclaimer of opinion — the auditor must not express any opinion on the financial statements. This is mandatory, not discretionary.",bad:"When an auditor lacks independence, they must disclaim an opinion. They cannot issue a qualified, adverse, or unmodified opinion — issuing any opinion without independence would be a violation of professional standards."},
+  {num:15,tag:"Ch. 18 — Going Concern",q:"When an auditor concludes there is substantial doubt about an entity’s ability to continue as a going concern, the auditor’s primary responsibility is to:",opts:["Issue an adverse opinion because of the possible effects on the financial statements.","Prepare prospective financial information to verify management’s plans.","Project future conditions for a period not to exceed one year.","Consider the adequacy of disclosure about the entity’s possible inability to continue."],correct:3,ok:"Correct! The auditor’s primary going concern responsibility is to evaluate whether the disclosures are adequate. A going concern doubt does not automatically result in an adverse opinion.",bad:"Going concern does not automatically trigger an adverse opinion. The auditor’s responsibility is to evaluate whether management has adequately disclosed the circumstances and whether the financial statements appropriately reflect the situation."},
+];
+
+// ── MATCHING: CONTROL DEFICIENCIES ───────────────────────────────────────
+var deficPairs = [
+  {id:"cd",term:"Control Deficiency",def:"Exists when the design or operation of a control does not allow misstatements to be prevented or detected on a timely basis. The least severe category."},
+  {id:"sd",term:"Significant Deficiency",def:"Less severe than a material weakness, but important enough to merit attention by those charged with governance. Reasonable possibility of a significant but non-material misstatement."},
+  {id:"mw",term:"Material Weakness",def:"A reasonable possibility that a material misstatement will not be prevented or detected. The most severe classification. Must be disclosed in management’s ICFR report."},
+  {id:"cenv",term:"Control Environment Failure",def:"Occurs when tone at the top is deficient — such as when management circumvents governance structures or restricts the internal audit function’s access to the audit committee."},
+  {id:"scope",term:"Scope Limitation",def:"Results when the auditor cannot obtain sufficient evidence — such as when an entity’s attorney refuses to respond to the letter of audit inquiry. May require a qualified opinion or disclaimer."}
+];
+
+// ── MATCHING: SAMPLING TERMS ──────────────────────────────────────────────
+var sampPairs = [
+  {id:"sr",term:"Sampling Risk",def:"The risk that the auditor’s conclusion based on a sample differs from the conclusion that would be reached by examining the entire population."},
+  {id:"cl",term:"Confidence Level",def:"The complement of sampling risk. A 95% confidence level means there is a 5% risk that the sample will lead to an incorrect conclusion."},
+  {id:"tdr",term:"Tolerable Deviation Rate",def:"The maximum rate of deviations from a control that the auditor is willing to accept while still relying on the control. Key input to sample size for tests of controls."},
+  {id:"edp",term:"Expected Deviation Rate",def:"The auditor’s estimate of the actual rate at which deviations from a control exist in the population. Higher expected rates require larger samples."},
+  {id:"tm",term:"Tolerable Misstatement",def:"The maximum monetary error in an account balance or class of transactions that the auditor is willing to accept without requiring adjustment. Equivalent to performance materiality for the account."},
+  {id:"ia",term:"Incorrect Acceptance (Type II)",def:"The risk that the sample supports a conclusion that an account is not materially misstated when in fact it is. Affects audit effectiveness."},
+  {id:"ir",term:"Incorrect Rejection (Type I)",def:"The risk that the sample supports a conclusion that an account is materially misstated when in fact it is not. Affects audit efficiency."}
+];
+
+// ── RENDER FLASHCARDS ─────────────────────────────────────────────────────
+var grid = document.getElementById("card-grid");
+cards.forEach(function(c) {
+  var div = document.createElement("div");
+  div.className = "fc";
+  div.dataset.cat = c.cat;
+  div.innerHTML = "<div class=\"fc-inner\"><div class=\"fc-front\"><p class=\"fc-label\">"+c.label+"</p><p class=\"fc-term\">"+c.term+"</p><p class=\"fc-hint\">Click to reveal</p></div><div class=\"fc-back\"><p class=\"fc-def\">"+c.def+"</p></div></div>";
+  div.onclick = function() { this.classList.toggle("flipped"); };
+  grid.appendChild(div);
+});
+
+function filterCards(cat, btn) {
+  document.querySelectorAll(".tab-btn").forEach(function(b){ b.classList.remove("active"); });
+  btn.classList.add("active");
+  document.querySelectorAll("#card-grid .fc").forEach(function(c){
+    c.style.display = (cat === "all" || c.dataset.cat === cat) ? "" : "none";
+  });
+}
+
+// ── RENDER QUIZ ───────────────────────────────────────────────────────────
+var qc = document.getElementById("quiz-container");
+questions.forEach(function(q) {
+  var box = document.createElement("div");
+  box.className = "quiz-q";
+  var opts = q.opts.map(function(o, i) {
+    var L = ["A","B","C","D"][i];
+    return "<div class=\"opt\" onclick=\"checkQ(this,"+i+","+q.correct+",'fb"+q.num+"','"+esc(q.ok)+"','"+esc(q.bad)+"')\">" +
+           "<span class=\"opt-letter\">"+L+"</span>"+o+"</div>";
+  }).join("");
+  box.innerHTML = "<div class=\"quiz-num\">Question "+q.num+" &nbsp;&bull;&nbsp; "+q.tag+"</div>" +
+                  "<div class=\"quiz-text\">"+q.q+"</div><div>"+opts+"</div>" +
+                  "<div class=\"feedback\" id=\"fb"+q.num+"\"></div>";
+  qc.appendChild(box);
+});
+
+function esc(s){ return s.replace(/'/g,"\\'"); }
+
+function checkQ(el, idx, correct, fbId, okMsg, badMsg) {
+  el.closest("div").querySelectorAll(".opt").forEach(function(o){ o.style.pointerEvents="none"; });
+  var fb = document.getElementById(fbId);
+  if (idx === correct) {
+    el.classList.add("correct");
+    fb.className = "feedback fb-ok show";
+    fb.innerHTML = "&#10003;&nbsp; " + okMsg;
+  } else {
+    el.classList.add("incorrect");
+    el.closest("div").querySelectorAll(".opt").forEach(function(o,i){ if(i!==idx) o.classList.add("revshow"); });
+    fb.className = "feedback fb-bad show";
+    fb.innerHTML = "&#10007;&nbsp; " + badMsg;
+  }
+}
+
+// ── MATCHING ENGINE ───────────────────────────────────────────────────────
+var mState = {};
+
+function buildMatching(pairs, gridId, prefix) {
+  var grid = document.getElementById(gridId);
+  var shuffled = pairs.slice().sort(function(){ return Math.random()-0.5; });
+  var html = "";
+  pairs.forEach(function(p, i) {
+    var d = shuffled[i];
+    html += "<div><div class=\"mterm\" data-id=\""+p.id+"\" onclick=\"mClick(this,'"+prefix+"')\" id=\""+prefix+"t"+i+"\">"+p.term+"</div></div>";
+    html += "<div><div class=\"mdef\" data-id=\""+d.id+"\" onclick=\"mClick(this,'"+prefix+"')\" id=\""+prefix+"d"+i+"\">"+d.def+"</div></div>";
+  });
+  grid.innerHTML = html;
+}
+
+function mClick(el, prefix) {
+  if (el.classList.contains("ok")) return;
+  var isTerm = el.classList.contains("mterm");
+  var key = prefix + (isTerm ? "T" : "D");
+  var prev = mState[key];
+  if (prev) prev.classList.remove("sel");
+  el.classList.add("sel");
+  mState[key] = el;
+  var t = mState[prefix+"T"], d = mState[prefix+"D"];
+  if (t && d) {
+    if (t.dataset.id === d.dataset.id) {
+      [t,d].forEach(function(x){ x.classList.remove("sel"); x.classList.add("ok"); x.onclick=null; });
+    } else {
+      [t,d].forEach(function(x){ x.classList.add("bad"); });
+      setTimeout(function(){ [t,d].forEach(function(x){ x.classList.remove("bad","sel"); }); mState[prefix+"T"]=null; mState[prefix+"D"]=null; }, 850);
+      return;
+    }
+    mState[prefix+"T"]=null; mState[prefix+"D"]=null;
+    updateScore(prefix);
+  }
+}
+
+function checkMatch(prefix, total) { /* handled on click */ }
+
+function updateScore(prefix) {
+  var matched = document.querySelectorAll("[id^=\""+prefix+"t\"].ok").length;
+  var total = prefix==="defic" ? deficPairs.length : sampPairs.length;
+  var s = document.getElementById(prefix+"-score");
+  s.innerHTML = matched >= total ? "&#10003; All "+total+" correct!" : matched+" of "+total+" matched";
+}
+
+function resetMatch(prefix, pairs, gridId) {
+  mState[prefix+"T"]=null; mState[prefix+"D"]=null;
+  buildMatching(pairs, gridId, prefix);
+  document.getElementById(prefix+"-score").textContent="";
+}
+
+buildMatching(deficPairs, "defic-grid", "defic");
+buildMatching(sampPairs, "samp-grid", "samp");
+</script>
+</body>
+</html>
